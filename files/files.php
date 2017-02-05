@@ -1,4 +1,4 @@
-<?php 
+<?php
 	session_start();
 	if (empty($_SESSION["email"]))
 		header("location: ../index.php");
@@ -12,17 +12,16 @@
 		<link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
 	</head>
 	<body>
-		<div class="">
-		<?php
-			echo $_SESSION["email"];
-		?>
-		</div>
-		<hr>
-		<form action="load.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
-			<input type="hidden" name="MAX_FILE_SIZE" value="209715200">
-			<input name="filename" type="file">
-			<input type="submit" value="Загрузить">
-		</form>
+		<nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+			<div class="navbar-brand">
+				Вы вошли, как
+				<?php
+					echo $_SESSION["email"];
+				?>
+			</div>
+			<a href="../users/logout.php" title="Выйти" class="navbar-brand glyphicon glyphicon-log-out"></a>
+		</nav>
+		
 		<hr>
 		<table class="table table-hover table-bordered" style="width: 40%; margin: auto;">
 			<thead>
@@ -47,7 +46,6 @@
 						}
 					}
 				}
-
 				function ShowFiles($id){
 					$db = @mysql_connect("localhost", "root", "20021");
 					mysql_select_db("Cloud", $db);
@@ -55,20 +53,20 @@
 					while($files = @mysql_fetch_array($query))
 					{
 						echo "<tr>";
-						echo "<td>".$files['file_name']."</td><td>".$files['size']."</td>"; 
+						echo "<td>".$files['file_name']."</td><td>".$files['size']."</td>";
 						echo "<td><a href=\"download.php/?path=".$files['path']."\"> Скачать </a></td>";
 						echo "<td><a href=\"remove.php?path=".$files['path']."\"> Удалить </a></td>";
 						echo "</tr>";
 					}
 					mysql_close($db);
 					}
-
 					ShowFiles(GetId($_SESSION["email"]));
-				?>
-			</table>
-			<hr>
-			<form action="../users/logout.php" method="post" accept-charset="utf-8">
-				<input type="submit" name="" value="Выйти">
-			</form>
-		</body>
-	</html>
+			?>
+		</table>
+		<hr>
+		<form action="load.php" method="post" enctype="multipart/form-data" id="upload" style="margin: auto;">
+			<h3><span class="label label-primary"><label for="uploadbtn" class="uploadButton">Загрузить файл</label></span></h3>
+			<input type="file" name="filename" id="uploadbtn" onchange="document.getElementById('upload').submit()" style="opacity: 0; z-index: -1;" for="load">
+		</form>
+	</body>
+</html>

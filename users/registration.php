@@ -15,6 +15,8 @@
 				<label for="password">Пароль</label>
 				<input type="password" name="password" value="" placeholder="Введите пароль" class="form-control">
 			</div>
-			<input type="submit" name="" value="Регистрация" class="btn btn-primary">
-		</body>
-	</html>
+			<input type="submit" name="" value="Регистрация" class="btn btn-primary" style="position: relative; float: left;">
+			<h1><a href="../index.php" title="Авторизация" class="navbar-brand glyphicon glyphicon-log-out" style="position: relative; float: right; margin-top: -5%;"></a></h1>
+		</form>
+	</body>
+</html>
