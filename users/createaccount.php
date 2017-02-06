@@ -7,7 +7,6 @@
 				else
 					return false;
 			}
-
 			function IsExistEmail($email)
 			{
 				$db = @mysql_connect("localhost", "root", "20021");
@@ -25,7 +24,6 @@
 				mysql_close($db);
 				return false;
 			}
-
 			function NewUser($email, $password)
 			{
 				$db = @mysql_connect("localhost", "root", "20021");
@@ -38,17 +36,27 @@
 			}
 			
 			session_start();
-
-			if ((CheckEmail($_POST["email"]) == true) && (strlen($_POST["password"]) > 7) && (IsExistEmail($_POST["email"]) == false))
-				{
-					NewUser($_POST["email"], $_POST["password"]);
-					$_SESSION["email"] = $_POST["email"];
-					$_SESSION["password"] = $_POST["password"];
-					header("location: ../files/files.php");
-				}
-				else
-					{
-						//do it: print error
-						header("location: registration.php");
-					}
-		?>
+			if (!(CheckEmail($_POST["email"])))
+			{
+				$_SESSION["error"] = "Неверный формат электронной почты!";
+				header("location: registration.php");
+				exit;
+			}
+			if (IsExistEmail($_POST["email"]))
+			{
+				$_SESSION["error"] = "Такой пользователь уже существует!";
+				header("location: registration.php");
+				exit;
+			}
+			if (strlen($_POST["password"]) < 8)
+			{
+				$_SESSION["error"] = "Пароль должен содержать минимум 8 символов!";
+				header("location: registration.php");
+				exit;
+			}
+				
+			NewUser($_POST["email"], $_POST["password"]);
+			$_SESSION["email"] = $_POST["email"];
+			$_SESSION["password"] = $_POST["password"];
+			header("location: ../files/files.php");
+?>
