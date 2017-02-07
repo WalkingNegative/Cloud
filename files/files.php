@@ -1,7 +1,7 @@
 <?php
 	session_start();
 	if (empty($_SESSION["email"]))
-		header("location: ../index.php");
+			header("location: ../index.php");
 ?>
 <!DOCTYPE html>
 <html>
@@ -53,9 +53,9 @@
 					while($files = @mysql_fetch_array($query))
 					{
 						echo "<tr>";
-						echo "<td>".$files['file_name']."</td><td>".$files['size']."</td>";
-						echo "<td><a href=\"download.php/?path=".$files['path']."\"> Скачать </a></td>";
-						echo "<td><a href=\"remove.php?path=".$files['path']."\"> Удалить </a></td>";
+								echo "<td>".$files['file_name']."</td><td>".$files['size']."</td>";
+								echo "<td><a href=\"download.php/?path=".$files['path']."\"> Скачать </a></td>";
+								echo "<td><a href=\"remove.php?path=".$files['path']."\"> Удалить </a></td>";
 						echo "</tr>";
 					}
 					mysql_close($db);
@@ -68,5 +68,12 @@
 			<h3><span class="label label-primary"><label for="uploadbtn" class="uploadButton">Загрузить файл</label></span></h3>
 			<input type="file" name="filename" id="uploadbtn" onchange="document.getElementById('upload').submit()" style="opacity: 0; z-index: -1;" for="load">
 		</form>
+		<?php
+			if (!empty($_SESSION["error"]))
+			{
+				echo "<script charset=\"utf-8\">alert(\"".$_SESSION["error"]."\");</script>";
+				unset($_SESSION["error"]);
+			}
+		?>
 	</body>
 </html>

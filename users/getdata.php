@@ -13,6 +13,7 @@
 	 		session_start();
 	 		$_SESSION["email"] = $_POST["email"];
 	 		$_SESSION["password"] = $_POST["password"];
+	 		unset($_SESSION["error"]);
 	 		header("location: auth.php");
 	 	}
 	 	else 

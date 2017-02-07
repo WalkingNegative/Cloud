@@ -29,8 +29,6 @@
 						echo "<div class=\"alert alert-danger\">".$_SESSION["error"]."</div>";
 					}
 				?>
-				<div class="error">
-				</div>
 				<input type="submit" name="" value="Войти" class="btn btn-primary">
 				<a href="users/registration.php" title=""><input type="button" name="" value="Регистрация" class="btn btn-success"></a>
 			</div>

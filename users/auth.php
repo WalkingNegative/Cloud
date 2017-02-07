@@ -19,6 +19,7 @@
    			 if (($users["email"] == $_SESSION["email"]) && ($users["pas"] == $_SESSION["password"]))
    			 	{
    			 		header("location: ../files/files.php");
+   			 		unset($_SESSION["error"]);
    			 		mysql_close($db);
    			 		exit;
    			 	};
