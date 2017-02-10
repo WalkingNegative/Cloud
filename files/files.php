@@ -1,4 +1,5 @@
 <?php
+	header("Content-Type: text/html; charset=utf-8");
 	session_start();
 	if (empty($_SESSION["email"]))
 			header("location: ../index.php");
@@ -55,7 +56,7 @@
 						echo "<tr>";
 								echo "<td>".$files['file_name']."</td><td>".$files['size']."</td>";
 								echo "<td><a href=\"download.php/?path=".$files['path']."\"> Скачать </a></td>";
-								echo "<td><a href=\"remove.php?path=".$files['path']."\"> Удалить </a></td>";
+								echo "<td><a href=\"remove.php/?path=".$files['path']."\"> Удалить </a></td>";
 						echo "</tr>";
 					}
 					mysql_close($db);

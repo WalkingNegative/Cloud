@@ -35,8 +35,11 @@
 				mkdir("../disc/".$_POST["email"]);
 			}
 			
+			$email = htmlentities($email, ENT_QUOTES, "UTF-8");
+			$password = htmlentities($_POST["password"], ENT_QUOTES, "UTF-8");
+
 			session_start();
-			if (!(CheckEmail($_POST["email"])))
+			if (!(CheckEmail($email)))
 			{
 				$_SESSION["error"] = "Неверный формат электронной почты!";
 				header("location: registration.php");
@@ -55,7 +58,7 @@
 				exit;
 			}
 				
-			NewUser($_POST["email"], $_POST["password"]);
+			NewUser($email, $_POST["password"]);
 			$_SESSION["email"] = $_POST["email"];
 			$_SESSION["password"] = $_POST["password"];
 			header("location: ../files/files.php");
