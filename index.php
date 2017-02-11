@@ -18,10 +18,10 @@
 		<form action="users/getdata.php" method="post" accept-charset="utf-8" role="form" style="width: 20%; margin: auto; margin-top: 15%;"> 
 			<div class="form-group">
 				<label for="email">Эл. почта</label>
-				<input type="text" name="email" value="" placeholder="Введите эл. почту" class="form-control">
+				<input type="text" name="email" value="" placeholder="Введите эл. почту" class="form-control" maxlength=35>
 				<br>
 				<label for="password">Пароль</label>
-				<input type="password" name="password" value="" placeholder="Введите пароль" class="form-control">
+				<input type="password" name="password" value="" placeholder="Введите пароль" class="form-control" maxlength=35>
 				<div class="error">
 			</div>
 				<hr>

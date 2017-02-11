@@ -1,3 +1,14 @@
+<?php
+	session_start();
+	$referer=getenv("HTTP_REFERER");
+	if ($referer != "http://localhost/cloud/index.php")
+	{
+		$_SESSION["error"] = "Неверный формат ввода";
+		header("location: ../index.php");
+		exit;
+	}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,8 +21,6 @@
 	<?php 
 		session_start();
 		$db = @mysql_connect("localhost", "root", "20021");
-		if (!($db))
-			echo "Не удалось подключиться!";
 		mysql_select_db("Cloud", $db);
 		$query = mysql_query("Select * From Users;");
 		while($users = mysql_fetch_array($query))
