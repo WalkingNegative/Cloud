@@ -37,7 +37,7 @@
 				function GetId($email){
 					$db = @mysql_connect("localhost", "root", "20021");
 					mysql_select_db("Cloud", $db);
-					$query = mysql_query("select * from Users where email = '".$email."';");
+					$query = mysql_query("select * from Users;");
 					while($users = @mysql_fetch_array($query))
 					{
 						if ($users["email"] == $email)
@@ -47,9 +47,11 @@
 						}
 					}
 				}
-				function ShowFiles($id){
+				function ShowFiles($id)
+				{
 					$db = @mysql_connect("localhost", "root", "20021");
 					mysql_select_db("Cloud", $db);
+					settype($id, 'integer');
 					$query = mysql_query("select * from Files where id_user = ".$id." order by id_file DESC;");
 					while($files = @mysql_fetch_array($query))
 					{
@@ -60,7 +62,7 @@
 						echo "</tr>";
 					}
 					mysql_close($db);
-					}
+				}
 					ShowFiles(GetId($_SESSION["email"]));
 			?>
 		</table>

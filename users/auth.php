@@ -12,7 +12,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Auth</title>
 	<link rel="stylesheet" href="st.css">
@@ -20,20 +19,19 @@
 <body>
 	<?php 
 		session_start();
-		$db = @mysql_connect("localhost", "root", "20021");
-		mysql_select_db("Cloud", $db);
-		$query = mysql_query("Select * From Users;");
-		while($users = mysql_fetch_array($query))
+		$db = new mysqli("localhost", "root", "20021", "Cloud");
+		$query = $db->query("Select * From Users;");
+		while($users = $query->fetch_assoc())
   		{
    			 if (($users["email"] == $_SESSION["email"]) && ($users["pas"] == $_SESSION["password"]))
    			 	{
    			 		header("location: ../files/files.php");
    			 		unset($_SESSION["error"]);
-   			 		mysql_close($db);
+   			 		$db::mysqli_close();
    			 		exit;
    			 	};
   		}
-		mysql_close($db);
+		$db::mysqli_close();
 		unset($_SESSION["email"]);
 		unset($_SESSION["password"]);
 		$_SESSION["error"] = "Неверный логин или пароль";

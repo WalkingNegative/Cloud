@@ -19,26 +19,24 @@
 
 	function IsExistEmail($email)
 		{
-			$db = @mysql_connect("localhost", "root", "20021");
-			mysql_select_db("Cloud", $db);
-			$query = @mysql_query("Select * From Users;");
-			while($users = mysql_fetch_array($query))
+			$db = new mysqli("localhost", "root", "20021", "Cloud");
+			$query = $db->query();
+			while($users = $query->fetch_assoc())
 				{
 					if (($users['email'] == $email))
 						{
 							return true;
 						};
 				}
-			mysql_close($db);
+			$db::mysqli_close();
 			return false;
 		}
 
 		function NewUser($email, $password)
 		{
-			$db = @mysql_connect("localhost", "root", "20021");
-			mysql_select_db("Cloud", $db);
-			mysql_query("Insert into Users (email, pas) values ('".$email."', '".$password."');");
-			mysql_close($db);
+			$db = new mysqli("localhost", "root", "20021", "Cloud");
+			$db->query("Insert into Users (email, pas) values ('".$email."', '".$password."');");
+			$db::mysqli_close();
 			mkdir("../disc/".$_POST["email"]);
 		}
 			
@@ -64,8 +62,8 @@
 			exit;
 		}
 				
-		NewUser($email, $_POST["password"]);
-		$_SESSION["email"] = $_POST["email"];
-		$_SESSION["password"] = $_POST["password"];
+		NewUser($email, $password);
+		$_SESSION["email"] = $email;
+		$_SESSION["password"] = $password;
 		header("location: ../files/files.php");
 ?>
