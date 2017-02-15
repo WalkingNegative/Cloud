@@ -1,4 +1,7 @@
 <?php
+	header("Content-Type: text/html; charset=utf-8");
+	include_once("../GetDetails.php");
+
 	function file_force_download($file) {
 		if (file_exists($file)) {
 			if (ob_get_level()) {
@@ -17,6 +20,14 @@
 		}
 	}
 
-	file_force_download($_GET["path"]);
-	header("location: files.php");
+	session_start();
+	//if (IsOwner($_GET["path"], GetId($_SESSION["email"])))
+	//{
+		file_force_download($_GET["path"]);
+		header("location: ../files.php");
+	//}
+	//else
+	//{
+		//header("location: ../index.php");
+	//}
 ?>

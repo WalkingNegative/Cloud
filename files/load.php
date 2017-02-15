@@ -1,19 +1,8 @@
 <?php
-	function GetId($email){
-		$db = @mysql_connect("localhost", "root", "20021");
-		mysql_select_db("Cloud", $db);
-		$query = mysql_query("select * from Users where email = '".$email."';");
-		while($users = @mysql_fetch_array($query))
-		{			
-			if ($users["email"] == $email)
-			{
-				return $users["id_user"];
-				mysql_close($db);
-			}
-		}
-	}
+	header("Content-Type: text/html; charset=utf-8");
+	include_once("../GetDetails.php");
 
-	function AddFile($id)
+	function AddFile($uploaddir,$id)
 	{
 		if(is_uploaded_file($_FILES["filename"]["tmp_name"]))
    		{
@@ -21,10 +10,9 @@
 	   		$path = $uploaddir.$_FILES["filename"]["name"];
 	   		echo $id;
 	   		move_uploaded_file($_FILES["filename"]["tmp_name"], $uploaddir.$_FILES["filename"]["name"]);
-			$db=@mysql_connect("localhost", "root", "20021");
-			mysql_select_db("Cloud", $db);
-			@mysql_query("insert into Files (file_name, path, id_user, size) values ('".$_FILES["filename"]["name"]."', '".$path."', ".$id.", ".$size.");");
-			mysql_close($db);
+			$db=new mysqli("localhost", "root", "20021", "Cloud");
+			$db->query("insert into Files (file_name, path, id_user, size) values ('".$_FILES["filename"]["name"]."', '".$path."', ".$id.", ".$size.");");
+			$db->close();
   		} 
   		else 
   		{
@@ -52,7 +40,7 @@
    }
 
    if (!CheckType($_FILES["filename"]["name"]))
-		AddFile(GetId($_SESSION["email"]));
+		AddFile($uploaddir,GetId($_SESSION["email"]));
 	else
 		$_SESSION["error"] = "Неподдерживаемый формат!"; 
 	header("location: files.php");

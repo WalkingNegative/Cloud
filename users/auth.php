@@ -18,7 +18,6 @@
 </head>
 <body>
 	<?php 
-		session_start();
 		$db = new mysqli("localhost", "root", "20021", "Cloud");
 		$query = $db->query("Select * From Users;");
 		while($users = $query->fetch_assoc())
@@ -27,11 +26,11 @@
    			 	{
    			 		header("location: ../files/files.php");
    			 		unset($_SESSION["error"]);
-   			 		$db::mysqli_close();
+   			 		$db->close();
    			 		exit;
    			 	};
   		}
-		$db::mysqli_close();
+		$db->close();
 		unset($_SESSION["email"]);
 		unset($_SESSION["password"]);
 		$_SESSION["error"] = "Неверный логин или пароль";

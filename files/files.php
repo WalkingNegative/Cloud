@@ -68,7 +68,7 @@
 		</table>
 		<hr>
 		<form action="load.php" method="post" enctype="multipart/form-data" id="upload" style="margin: auto;">
-			<h3><span class="label label-primary"><label for="uploadbtn" class="uploadButton">Загрузить файл</label></span></h3>
+			<h3><span class="label label-primary"><label for="uploadbtn">Загрузить файл</label></span></h3>
 			<input type="file" name="filename" id="uploadbtn" onchange="document.getElementById('upload').submit()" style="opacity: 0; z-index: -1;" for="load">
 		</form>
 		<?php
