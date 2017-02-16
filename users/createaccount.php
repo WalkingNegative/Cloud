@@ -1,6 +1,8 @@
 <?php
-	include_once("../GetDetails.php");	
+	include_once("../GetDetails.php");
+
 	session_start();
+
 	$referer=getenv("HTTP_REFERER");
 	if ($referer != "http://localhost/cloud/users/registration.php")
 	{
@@ -12,7 +14,7 @@
 	function IsExistEmail($email)
 	{
 		$db = new mysqli("localhost", "root", "20021", "Cloud");
-		$query = $db->query();
+		$query = $db->query("Select * From Users;");
 		while($users = $query->fetch_assoc())
 			{
 				if (($users['email'] == $email))
@@ -20,7 +22,7 @@
 						return true;
 					};
 			}
-		$db->mysqli_close();
+		$db->close();
 		return false;
 	}
 
@@ -28,14 +30,14 @@
 	{
 		$db = new mysqli("localhost", "root", "20021", "Cloud");
 		$db->query("Insert into Users (email, pas) values ('".$email."', '".$password."');");
-		$db->mysqli_close();
+		$db->close();
 		mkdir("../disc/".$_POST["email"]);
 	}
 			
-	$email = htmlentities($email, ENT_QUOTES, "UTF-8");
+	$email = htmlentities($_POST["email"], ENT_QUOTES, "UTF-8");
 	$password = htmlentities($_POST["password"], ENT_QUOTES, "UTF-8");
 
-	if (!(CheckEmail($email)))
+	if (!CheckEmail($email))
 	{
 		$_SESSION["error"] = "Неверный формат электронной почты!";
 		header("location: registration.php");
@@ -57,5 +59,6 @@
 	NewUser($email, $password);
 	$_SESSION["email"] = $email;
 	$_SESSION["password"] = $password;
+	unset($_SESSION["error"]);
 	header("location: ../files/files.php");
 ?>
