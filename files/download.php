@@ -1,8 +1,18 @@
 <?php
 	header("Content-Type: text/html; charset=utf-8");
-	include_once("../GetDetails.php");
 
-	function file_force_download($file) {
+	include_once("user.class.php");
+
+	session_start();
+	
+	$referer=getenv("HTTP_REFERER");
+	if ($referer != "http://localhost/cloud/files/files.php")
+	{
+		header("location: ../files.php");
+		exit;
+	}
+
+	function file_download($file) {
 		if (file_exists($file)) {
 			if (ob_get_level()) {
 				ob_end_clean();
@@ -23,7 +33,7 @@
 	session_start();
 	//if (IsOwner($_GET["path"], GetId($_SESSION["email"])))
 	//{
-		file_force_download($_GET["path"]);
+		file_download($_GET["path"]);
 		header("location: ../files.php");
 	//}
 	//else

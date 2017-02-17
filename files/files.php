@@ -34,36 +34,11 @@
 				</tr>
 			</thead>
 			<?php
-				function GetId($email){
-					$db = @mysql_connect("localhost", "root", "20021");
-					mysql_select_db("Cloud", $db);
-					$query = mysql_query("select * from Users;");
-					while($users = @mysql_fetch_array($query))
-					{
-						if ($users["email"] == $email)
-						{
-							return $users["id_user"];
-							mysql_close($db);
-						}
-					}
-				}
-				function ShowFiles($id)
-				{
-					$db = @mysql_connect("localhost", "root", "20021");
-					mysql_select_db("Cloud", $db);
-					settype($id, 'integer');
-					$query = mysql_query("select * from Files where id_user = ".$id." order by id_file DESC;");
-					while($files = @mysql_fetch_array($query))
-					{
-						echo "<tr>";
-								echo "<td>".$files['file_name']."</td><td>".$files['size']."</td>";
-								echo "<td><a href=\"download.php/?path=".$files['path']."\"> Скачать </a></td>";
-								echo "<td><a href=\"remove.php/?path=".$files['path']."\"> Удалить </a></td>";
-						echo "</tr>";
-					}
-					mysql_close($db);
-				}
-					ShowFiles(GetId($_SESSION["email"]));
+				include_once("../users/user.class.php");
+				include_once("file.class.php");
+				$user  = new User();
+				$file = new File();
+				$file->show_files($user->get_id($_SESSION["email"]));
 			?>
 		</table>
 		<hr>

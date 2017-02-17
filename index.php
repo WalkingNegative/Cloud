@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
 	</head>
 	<body>
-		<form action="users/getdata.php" method="post" accept-charset="utf-8" role="form" style="width: 20%; margin: auto; margin-top: 15%;"> 
+		<form action="users/auth.php" method="post" accept-charset="utf-8" role="form" style="width: 20%; margin: auto; margin-top: 15%;"> 
 			<div class="form-group">
 				<label for="email">Эл. почта</label>
 				<input type="text" name="email" value="" placeholder="Введите эл. почту" class="form-control" maxlength=35>

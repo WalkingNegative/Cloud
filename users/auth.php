@@ -1,5 +1,8 @@
 <?php
+	include_once("user.class.php");
+
 	session_start();
+	
 	$referer=getenv("HTTP_REFERER");
 	if ($referer != "http://localhost/cloud/index.php")
 	{
@@ -7,21 +10,27 @@
 		header("location: ../index.php");
 		exit;
 	}
-	$db = new mysqli("localhost", "root", "20021", "Cloud");
-	$query = $db->query("Select * From Users;");
-	while($users = $query->fetch_assoc())
+
+	$user = new User();
+	$email = $user->clear_text($_POST["email"]);
+	$password = $user->clear_text($_POST["password"]);
+
+	if ((!$user->check_email($email)) || (strlen($password) < 8))
+ 	{
+ 		$_SESSION["error"] = "Неверный формат ввода";
+ 		header("location: ../index.php");
+ 		exit;
+ 	}
+
+	if (!$user->authorization($email, $password))
 	{
-		if (($users["email"] == $_SESSION["email"]) && ($users["pas"] == $_SESSION["password"]))
-	 	{
-	 		header("location: ../files/files.php");
-	 		unset($_SESSION["error"]);
-	 		$db->close();
-	 		exit;
-	 	};
+		$_SESSION["error"] = "Неверный логин или пароль";
+		header("location: ../index.php");
 	}
-	$db->close();
-	unset($_SESSION["email"]);
-	unset($_SESSION["password"]);
-	$_SESSION["error"] = "Неверный логин или пароль";
-	header("location: ../index.php");
+	else
+	{
+		$_SESSION["email"] = $email;
+		$_SESSION["password"] = $password;
+		header("location: ../files/files.php");	
+	}
 ?>
