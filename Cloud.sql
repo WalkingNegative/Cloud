@@ -6,7 +6,7 @@ use Cloud;
 create table Users(
 id_user int auto_increment primary key,
 email varchar(30) not null,
-pas varchar(24) not null);
+pas varchar(255) not null);
 
 
 CREATE TABLE Files (

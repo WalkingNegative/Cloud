@@ -46,7 +46,7 @@
 			$query = $db->query("Select * From Users;");
 			while($users = $query->fetch_assoc())
 			{
-				if (($users["email"] == $email) && ($users["pas"] == $password))
+				if (($users["email"] == $email) && (password_verify($password, $users["pas"])))
 			 	{
 			 		header("location: ../files/files.php");
 			 		unset($_SESSION["error"]);
@@ -60,6 +60,7 @@
 		
 		function new_user($email, $password)
 		{
+			$password = password_hash($password, PASSWORD_DEFAULT);
 			$db = new mysqli("localhost", "root", "20021", "Cloud");
 			$db->query("Insert into Users (email, pas) values ('".$email."', '".$password."');");
 			$db->close();
@@ -69,6 +70,7 @@
 		function clear_text($text)
 		{
 			$text = htmlentities($text, ENT_QUOTES, "UTF-8");
+			$text = str_replace(" ", "", $text);
 			return $text;
 		}
 	}
