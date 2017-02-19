@@ -64,7 +64,7 @@
 			$db = new mysqli("localhost", "root", "20021", "Cloud");
 			$db->query("Insert into Users (email, pas) values ('".$email."', '".$password."');");
 			$db->close();
-			mkdir("../disc/".$_POST["email"]);
+			mkdir("../disc/".$email);
 		}
 
 		function clear_text($text)
@@ -73,5 +73,6 @@
 			$text = str_replace(" ", "", $text);
 			return $text;
 		}
+
 	}
 ?>

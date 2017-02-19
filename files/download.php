@@ -1,7 +1,10 @@
 <?php
 	header("Content-Type: text/html; charset=utf-8");
 
-	include_once("user.class.php");
+	include_once("../users/user.class.php");
+	include_once("file.class.php");
+	$user  = new User();
+	$file = new File();
 
 	session_start();
 	
@@ -12,32 +15,16 @@
 		exit;
 	}
 
-	function file_download($file) {
-		if (file_exists($file)) {
-			if (ob_get_level()) {
-				ob_end_clean();
-			}
-			header('Content-Description: File Transfer');
-			header('Content-Type: application/octet-stream');
-			header('Content-Disposition: attachment; filename=' . basename($file));
-			header('Content-Transfer-Encoding: binary');
-			header('Expires: 0');
-			header('Cache-Control: must-revalidate');
-			header('Pragma: public');
-			header('Content-Length: ' . filesize($file));
-			readfile($file);
-			exit;
-		}
-	}
-
 	session_start();
-	//if (IsOwner($_GET["path"], GetId($_SESSION["email"])))
-	//{
-		file_download($_GET["path"]);
+	$email = $user->clear_text($_SESSION["email"]);
+	$path = $user->clear_text($_GET["path"]);
+	if ($file->is_owner($path, $user->get_id($email)))
+	{
+		$file->file_download($path);
 		header("location: ../files.php");
-	//}
-	//else
-	//{
-		//header("location: ../index.php");
-	//}
+	}
+	else
+	{
+		header("location: ../files.php");
+	}
 ?>

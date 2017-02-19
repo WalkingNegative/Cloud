@@ -1,5 +1,6 @@
 <?php
 	include_once("user.class.php");
+	include_once("../files/file.class.php");
 
 	session_start();
 	
@@ -12,6 +13,7 @@
 	}
 
 	$user = new User();
+	$file = new File();
 	$email = $user->clear_text($_POST["email"]);
 	$password = $user->clear_text($_POST["password"]);
 
@@ -31,6 +33,11 @@
 	{
 		$_SESSION["email"] = $email;
 		$_SESSION["password"] = $password;
+		if (!file_exists("../disc/".$email))
+		{
+			$file->delete_all_files($user->get_id($email));
+			mkdir("../disc/".$email);
+		}
 		header("location: ../files/files.php");	
 	}
 ?>
