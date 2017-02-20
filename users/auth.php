@@ -18,11 +18,11 @@
 	$password = $user->clear_text($_POST["password"]);
 
 	if ((!$user->check_email($email)) || (strlen($password) < 8))
- 	{
- 		$_SESSION["error"] = "Неверный формат ввода";
- 		header("location: ../index.php");
- 		exit;
- 	}
+	{
+		$_SESSION["error"] = "Неверный формат ввода";
+		header("location: ../index.php");
+		exit;
+	}
 
 	if (!$user->authorization($email, $password))
 	{

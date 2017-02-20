@@ -1,9 +1,11 @@
 <?php 
+	include_once("../config.php.ini");
+
 	class User
 	{
 		function get_id($email)
 		{
-			$db = new mysqli("localhost", "root", "20021", "Cloud");
+			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			$query = $db->query("select * from Users;");
 			while($users = $query->fetch_assoc())
 			{
@@ -27,7 +29,7 @@
 
 		function is_exist_email($email)
 		{
-			$db = new mysqli("localhost", "root", "20021", "Cloud");
+			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			$query = $db->query("Select * From Users;");
 			while($users = $query->fetch_assoc())
 				{
@@ -42,7 +44,7 @@
 
 		function authorization($email, $password)
 		{
-			$db = new mysqli("localhost", "root", "20021", "Cloud");
+			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			$query = $db->query("Select * From Users;");
 			while($users = $query->fetch_assoc())
 			{
@@ -61,7 +63,7 @@
 		function new_user($email, $password)
 		{
 			$password = password_hash($password, PASSWORD_DEFAULT);
-			$db = new mysqli("localhost", "root", "20021", "Cloud");
+			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			$db->query("Insert into Users (email, pas) values ('".$email."', '".$password."');");
 			$db->close();
 			mkdir("../disc/".$email);

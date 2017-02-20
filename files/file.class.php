@@ -1,9 +1,11 @@
-<?php 
+<?php
+	include_once("../config.php.ini");
+	
 	class File
 	{
 		function is_owner($file, $id)
 		{
-			$db = new mysqli("localhost", "root", "20021", "Cloud");
+			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			$query = $db->query("select * from Files;");
 			while($files = $query->fetch_assoc())
 			{
@@ -19,7 +21,7 @@
 
 		function show_files($id)
 		{
-			$db =new mysqli("localhost", "root", "20021", "Cloud");
+			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			settype($id, 'integer');
 			$query = $db->query("select * from Files where id_user = ".$id." order by id_file DESC;");
 			while($files = $query->fetch_assoc())
@@ -62,7 +64,7 @@
 				$path = $uploaddir.$_FILES["filename"]["name"];
 				echo $id;
 				move_uploaded_file($_FILES["filename"]["tmp_name"], $uploaddir.$_FILES["filename"]["name"]);
-				$db=new mysqli("localhost", "root", "20021", "Cloud");
+				$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 				$db->query("insert into Files (file_name, path, id_user, size) values ('".$_FILES["filename"]["name"]."', '".$path."', ".$id.", ".$size.");");
 				$db->close();
 			} 
@@ -75,14 +77,14 @@
 		function delete_file($path)
 		{
 			unlink($path);
-			$db = new mysqli("localhost", "root", "20021", "Cloud");
+			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			$db->query("delete from Files where path = '".$path."';");
 			$db->close();
 		}
 
 		function delete_all_files($id)
 		{
-			$db = new mysqli("localhost", "root", "20021", "Cloud");
+			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			$db->query("delete from Files where id_user = '".$id."';");
 			$db->close();
 		}
