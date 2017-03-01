@@ -1,5 +1,9 @@
 <?php
-	include_once("user.class.php");
+	header("Content-Type: text/html; charset=utf-8");
+
+	require "../config.php.ini";
+	require "../classes/file.class.php";
+	require "../classes/user.class.php";
 
 	session_start();
 
@@ -12,32 +16,34 @@
 	}
 	
 	$user = new User();
+	$file = new File();
+	$email = $_POST["email"];
+	$password = $_POST["password"];
+	$hash = $_POST["SecurityHash"];
+	$ip = $_SERVER['REMOTE_ADDR'];
 
-	$email = $user->clear_text($_POST["email"]);
-	$password = $user->clear_text($_POST["password"]);
-
-	if (!$user->check_email($email))
-	{
-		$_SESSION["error"] = "Неверный формат электронной почты!";
-		header("location: registration.php");
-		exit;
-	}
 	if ($user->is_exist_email($email))
 	{
 		$_SESSION["error"] = "Такой пользователь уже существует!";
 		header("location: registration.php");
 		exit;
 	}
-	if (strlen($password) < 8)
+
+	$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+	$db->query('delete from `loginhash` where `Deadline` < NOW()');
+
+	$result = $db->query("Select * from `Loginhash` Where ip = '".$ip."' and  hash = '".$hash."';");	
+	if($result->num_rows != 1)
 	{
-		$_SESSION["error"] = "Пароль должен содержать минимум 8 символов!";
+		sleep(5);
 		header("location: registration.php");
-		exit;
 	}
 				
 	$user->new_user($email, $password);
 	$_SESSION["email"] = $email;
 	$_SESSION["password"] = $password;
 	unset($_SESSION["error"]);
+	$db->query("delete from `loginhash` where Hash='".$hash."'");
+	$db->close();
 	header("location: ../files/files.php");
 ?>

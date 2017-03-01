@@ -3,6 +3,10 @@
 	session_start();
 	if (empty($_SESSION["email"]))
 			header("location: ../index.php");
+
+	require "../config.php.ini";
+	require "../classes/file.class.php";
+	require "../classes/user.class.php";
 ?>
 <!DOCTYPE html>
 <html>
@@ -34,8 +38,6 @@
 				</tr>
 			</thead>
 			<?php
-				include_once("../users/user.class.php");
-				include_once("file.class.php");
 				$user  = new User();
 				$file = new File();
 				$file->show_files($user->get_id($_SESSION["email"]));
