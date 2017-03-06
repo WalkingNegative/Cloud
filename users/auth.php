@@ -17,8 +17,9 @@
 	$file = new File();
 	$email = $_POST["email"];
 	$password = $_POST["password"];
-	$hash = $_POST["SecurityHash"];
-	$ip = $_SERVER['REMOTE_ADDR'];
+	$hash = $_POST["hash"];
+	$ip = $_SERVER["REMOTE_ADDR"];
+	echo $email." ".$password."<br>";
 
 	$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 	$db->query('delete from `loginhash` where `Deadline` < NOW()');
@@ -27,6 +28,7 @@
 	if($result->num_rows != 1)
 	{
 		sleep(5);
+		$_SESSION["error"] = "Ошибка! Попробуйте снова.";
 		header("location:../index.php");
 		exit;
 	}
@@ -51,5 +53,4 @@
 		
 	$db->query("delete from `loginhash` where Hash='".$hash."'");
 	$db->close();
-	
 ?>

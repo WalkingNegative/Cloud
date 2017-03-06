@@ -1,6 +1,8 @@
 <?php
 	header("Content-Type: text/html; charset=utf-8");
+
 	session_start();
+
 	if (empty($_SESSION["email"]))
 			header("location: ../index.php");
 
@@ -28,20 +30,26 @@
 		</nav>
 		
 		<hr>
-		<table class="table table-hover table-bordered" style="width: 40%; margin: auto;">
-			<thead>
-				<tr class="alert alert-info">
-					<th>Имя файла</th>
-					<th>Размер</th>
-					<th><span class="glyphicon glyphicon-download-alt"></span></th>
-					<th><span class="glyphicon glyphicon-trash"></span></th>
-				</tr>
-			</thead>
-			<?php
-				$user  = new User();
-				$file = new File();
+		<?php
+			$user  = new User();
+			$file = new File();
+
+			if ($file->count_files($user->get_id($_SESSION["email"])) > 0)
+			{
+				echo "<table class=\"table table-hover table-bordered\" style=\"width: 40%; margin: auto;\">
+					<thead>
+						<tr class=\alert alert-info\">
+							<th>Имя файла</th>
+							<th>Размер</th>
+							<th><span class=\"glyphicon glyphicon-download-alt\"></span></th>
+							<th><span class=\"glyphicon glyphicon-trash\"></span></th>
+						</tr>
+					</thead>";
 				$file->show_files($user->get_id($_SESSION["email"]));
-			?>
+			}
+			else
+				echo "<div class=\"alert alert-success\">У вас ещё нет файлов</div>";
+		?>
 		</table>
 		<hr>
 		<form action="load.php" method="post" enctype="multipart/form-data" id="upload" style="margin: auto;">

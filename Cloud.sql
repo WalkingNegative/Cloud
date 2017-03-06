@@ -11,6 +11,8 @@ CREATE TABLE `Users` (
     `pas` CHAR(255) NOT NULL
 );
 
+
+#drop table `Loginhash`;
 CREATE TABLE `Loginhash` (
     `ip` VARCHAR(15) NOT NULL,
     `hash` VARCHAR(40) NOT NULL,
@@ -27,5 +29,9 @@ CREATE TABLE `Files` (
         REFERENCES Users (id_user)
         ON DELETE CASCADE
 );
+
+select * from Users;
+
+select * from Loginhash;
 
 

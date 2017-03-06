@@ -1,4 +1,4 @@
-<?php 
+<?php
 	include_once("../config.php.ini");
 
 	class User
@@ -48,7 +48,7 @@
 			$query = $db->query("Select * From `Users`;");
 			while($users = $query->fetch_assoc())
 			{
-				if (($users["email"] == $email) && (password_verify($password, $users["pas"])))
+				if (($users["email"] == $email) && password_verify($password, $users["pas"]))
 			 	{
 			 		$db->close();
 			 		return true;
@@ -58,17 +58,14 @@
 			echo $email."   ".$password;
 			return false;
 		}
-		
+
 		function new_user($email, $password)
 		{
-			echo $email." ".$password."<br>";
 			$password = password_hash($password, PASSWORD_DEFAULT);
-			echo $email." ".$password;
+			echo $password;
 			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			$db->query("Insert into `Users` (`email`, `pas`) values ('".$email."', '".$password."');");
 			$db->close();
-			if (!file_exists("../disc/".$email))
-				mkdir("../disc/".$email);
 		}
 
 		function clear_text($text)

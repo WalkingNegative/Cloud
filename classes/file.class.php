@@ -19,6 +19,16 @@
 			return false;
 		}
 
+		function count_files($id)
+		{
+			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+			settype($id, 'integer');
+			$query = $db->query("select * from Files where id_user = ".$id." order by id_file DESC;");
+			$result = $query->num_rows;
+			$db->close();
+			return $result;
+		}
+
 		function show_files($id)
 		{
 			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
