@@ -11,14 +11,6 @@ CREATE TABLE `Users` (
     `pas` CHAR(255) NOT NULL
 );
 
-
-#drop table `Loginhash`;
-CREATE TABLE `Loginhash` (
-    `ip` VARCHAR(15) NOT NULL,
-    `hash` VARCHAR(40) NOT NULL,
-    `deadline` DATETIME NOT NULL
-) ENGINE=MEMORY;
-
 CREATE TABLE `Files` (
     `id_file` INT AUTO_INCREMENT PRIMARY KEY,
     `file_name` VARCHAR(255) NOT NULL,
@@ -31,7 +23,5 @@ CREATE TABLE `Files` (
 );
 
 select * from Users;
-
-select * from Loginhash;
 
 

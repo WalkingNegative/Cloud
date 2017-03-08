@@ -3,12 +3,12 @@
 
 	session_start();
 
-	if (empty($_SESSION["email"]))
-			header("location: ../index.php");
+	if (empty($_SESSION["id_user"]))
+			header("location: ".PAGE_MAIN);
 
-	require "../config.php.ini";
-	require "../classes/file.class.php";
-	require "../classes/user.class.php";
+	include "../config.php.ini";
+	include "../classes/file.class.php";
+	include "../classes/user.class.php";
 ?>
 <!DOCTYPE html>
 <html>
@@ -23,7 +23,8 @@
 			<div class="navbar-brand">
 				Вы вошли, как
 				<?php
-					echo $_SESSION["email"];
+					$user  = new User();
+					echo $user->get_email($_SESSION["id_user"]);
 				?>
 			</div>
 			<a href="../users/logout.php" title="Выйти" class="navbar-brand glyphicon glyphicon-log-out"></a>
@@ -31,10 +32,8 @@
 		
 		<hr>
 		<?php
-			$user  = new User();
 			$file = new File();
-
-			if ($file->count_files($user->get_id($_SESSION["email"])) > 0)
+			if ($file->count_files($_SESSION["id_user"]) > 0)
 			{
 				echo "<table class=\"table table-hover table-bordered\" style=\"width: 40%; margin: auto;\">
 					<thead>

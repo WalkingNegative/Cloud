@@ -17,6 +17,20 @@
 			}
 		}
 
+		function get_email($id)
+		{
+			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+			$query = $db->query("select * from Users;");
+			while($users = $query->fetch_assoc())
+			{
+				if ($users["id_user"] == $id)
+				{
+					return $users["email"];
+					$db->close();
+				}
+			}
+		}
+
 		function check_email($email)
 		{
 			$regex = '/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/';

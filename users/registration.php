@@ -6,23 +6,11 @@
 	session_start();
 
 	$referer=getenv("HTTP_REFERER");
-	if ($referer == "http://localhost/cloud/index.php")
+	if ($referer == PAGE_START)
 		unset($_SESSION["error"]);
 
 	if (!empty($_SESSION["email"]))
-		header("location: files/files.php");
-
-	$ip = $_SERVER['REMOTE_ADDR'];
-
-	$hash = sha1(time() . rand() . $ip);
-
-	$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-	$db->query('delete from `loginhash` where `deadline` < now()');
-
-	sleep(1);
-
-	$db->query("insert into `loginhash` (`ip`,`hash`,`deadline`) VALUES('$ip', '$hash', ADDTIME(NOW(), '0:10:0'))");
-	$db->close();
+		header("location: ".PAGE_FILES);
 ?>
 <!DOCTYPE html>
 <html>
@@ -43,7 +31,6 @@
 				<label for="password">Пароль</label>
 				<input type="password"  id="pas" value="" placeholder="Введите пароль" class="form-control" maxlength="35">
 				<input type="hidden" name="password" id="password" value="">
-				<input type="hidden" name="hash" value="<?php echo $hash; ?>">;
 				<div class="error">
 			</div>
 			<hr>

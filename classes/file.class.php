@@ -29,6 +29,18 @@
 			return $result;
 		}
 
+		function get_path($id)
+		{
+			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+			settype($id, 'integer');
+			$query = $db->query("select * from Files;");
+			echo $query->num_rows;
+			while($files = $query->fetch_assoc())
+				if ($files["id_file"] == $id)
+					return $files["path"];
+			return false;
+		}
+
 		function show_files($id)
 		{
 			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
@@ -38,8 +50,8 @@
 			{
 				echo "<tr>";
 				echo "<td>".$files['file_name']."</td><td>".$files['size']."</td>";
-				echo "<td><a href=\"download.php/?path=".$files['path']."\"> Скачать </a></td>";
-				echo "<td><a href=\"remove.php/?path=".$files['path']."\"> Удалить </a></td>";
+				echo "<td><a href=\"".PAGE_DOWNLOAD.$files['id_file']."\">Скачать </a></td>";
+				echo "<td><a href=\"".PAGE_REMOVE.$files['id_file']."\"> Удалить </a></td>";
 				echo "</tr>";
 			}
 			$db->close();
