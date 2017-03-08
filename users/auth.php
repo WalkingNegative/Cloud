@@ -5,13 +5,13 @@
 
 	session_start();
 
-	/*$referer=getenv("HTTP_REFERER");
-	if ($referer != "http://localhost/cloud/index.php")
+	$referer=getenv("HTTP_REFERER");
+	if ($referer != PAGE_START)
 	{
 		$_SESSION["error"] = "Неверный формат ввода";
-		header("location: ../index.php");
+		header("location: ".PAGE_START);
 		exit;
-	}*/
+	}
 
 	$user = new User();
 	$file = new File();

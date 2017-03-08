@@ -9,6 +9,9 @@
 	if ($referer == PAGE_START)
 		unset($_SESSION["error"]);
 
+	if (!empty($_SESSION["id_user"]))
+		header("location: ".PAGE_FILES);
+
 	if (!empty($_SESSION["email"]))
 		header("location: ".PAGE_FILES);
 ?>

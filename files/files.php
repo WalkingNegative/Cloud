@@ -1,14 +1,14 @@
 <?php
 	header("Content-Type: text/html; charset=utf-8");
 
-	session_start();
-
-	if (empty($_SESSION["id_user"]))
-			header("location: ".PAGE_MAIN);
-
 	include "../config.php.ini";
 	include "../classes/file.class.php";
 	include "../classes/user.class.php";
+
+	session_start();
+
+	if (empty($_SESSION["id_user"]))
+			header("location: ".PAGE_START);
 ?>
 <!DOCTYPE html>
 <html>
@@ -44,7 +44,7 @@
 							<th><span class=\"glyphicon glyphicon-trash\"></span></th>
 						</tr>
 					</thead>";
-				$file->show_files($user->get_id($_SESSION["email"]));
+				$file->show_files($_SESSION["id_user"]);
 			}
 			else
 				echo "<div class=\"alert alert-success\">У вас ещё нет файлов</div>";
