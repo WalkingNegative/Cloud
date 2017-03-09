@@ -10,9 +10,9 @@
 
 	session_start();
 	$uploaddir = DIR_DISC.$user->get_email($_SESSION["id_user"])."/";
-	if($_FILES["filename"]["size"] > 209715200)
+	if($_FILES["filename"]["size"] > 85899345920)
 	{
-		echo ("Размер файла превышает 200 мегабайт");
+		$_SESSION["error"] = ("Размер файла превышает 10 ГБ");
 		exit;
 	}
 

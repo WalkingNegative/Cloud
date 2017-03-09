@@ -3,16 +3,14 @@
 
 	require "../config.php.ini";
 	require "../classes/file.class.php";
-	require "../classes/user.class.php";
 
-	$user  = new User();
 	$file = new File();
 
 	session_start();
 
 	$path = $file->get_path($_GET["id_file"]);
 		
-	if ($file->is_owner($path, $_SESSION["id_user"]))
+	if ($file->is_owner($_GET["id_file"], $_SESSION["id_user"]))
 		$file->delete_file($path);
 	header("location: ".PAGE_FILES);
 ?>

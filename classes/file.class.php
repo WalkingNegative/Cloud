@@ -3,18 +3,16 @@
 	
 	class File
 	{
-		function is_owner($file, $id)
+		function is_owner($id_user, $id_file)
 		{
 			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			$query = $db->query("select * from Files;");
 			while($files = $query->fetch_assoc())
-			{
-				if (($files["path"] == $file) && ($files["id_user"] == $id))
+				if (($files["id_file"] == $id_file) && ($files["id_user"] == $id_user))
 				{
-					return true;
 					$db->close();
+					return true;
 				}
-			}
 			$db->close();
 			return false;
 		}
@@ -34,7 +32,6 @@
 			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			settype($id, 'integer');
 			$query = $db->query("select * from Files;");
-			echo $query->num_rows;
 			while($files = $query->fetch_assoc())
 				if ($files["id_file"] == $id)
 					return $files["path"];
@@ -84,16 +81,13 @@
 			{
 				$size = round($_FILES["filename"]["size"]/1048576, 2);
 				$path = $uploaddir.$_FILES["filename"]["name"];
-				echo $id;
 				move_uploaded_file($_FILES["filename"]["tmp_name"], $uploaddir.$_FILES["filename"]["name"]);
 				$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 				$db->query("insert into Files (file_name, path, id_user, size) values ('".$_FILES["filename"]["name"]."', '".$path."', ".$id.", ".$size.");");
 				$db->close();
 			} 
-			else 
-			{
+			else
 				$_SESSION["error"] = "Ошибка загузки файла";
-			}
 		}
 
 		function delete_file($path)
@@ -115,10 +109,9 @@
 		{
 			$type = new SplFileInfo($name);
 			$types = array ("com","bat","js","php","cmd","vb","vbs");
-			foreach ($types as $value) {
+			foreach ($types as $value)
 				if ($value == ($type->getExtension()))
 					return true;
-			}
 			return false;
 		}
 	}
