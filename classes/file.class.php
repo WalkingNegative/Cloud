@@ -1,23 +1,23 @@
 <?php
 	include_once("../config.php.ini");
 	
-	class File
+	class File 
 	{
-		function is_owner($id_user, $id_file)
+		public function isOwner($id_user, $id_file)
 		{
 			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			$query = $db->query("select * from Files;");
-			while($files = $query->fetch_assoc())
-				if (($files["id_file"] == $id_file) && ($files["id_user"] == $id_user))
-				{
+			while($files = $query->fetch_assoc()) {
+				if (($files["id_file"] == $id_file) && ($files["id_user"] == $id_user)) {
 					$db->close();
 					return true;
 				}
+			}
 			$db->close();
 			return false;
 		}
 
-		function count_files($id)
+		public function countFiles($id)
 		{
 			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			settype($id, 'integer');
@@ -27,24 +27,25 @@
 			return $result;
 		}
 
-		function get_path($id)
+		public function getPath($id)
 		{
 			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			settype($id, 'integer');
 			$query = $db->query("select * from Files;");
-			while($files = $query->fetch_assoc())
-				if ($files["id_file"] == $id)
+			while($files = $query->fetch_assoc()) {
+				if ($files["id_file"] == $id) {
 					return $files["path"];
+				}
+			}
 			return false;
 		}
 
-		function show_files($id)
+		public function showFiles($id)
 		{
 			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			settype($id, 'integer');
 			$query = $db->query("select * from Files where id_user = ".$id." order by id_file DESC;");
-			while($files = $query->fetch_assoc())
-			{
+			while ($files = $query->fetch_assoc()) {
 				echo "<tr>";
 				echo "<td>".$files['file_name']."</td><td>".$files['size']."</td>";
 				echo "<td><a href=\"".PAGE_DOWNLOAD.$files['id_file']."\">Скачать </a></td>";
@@ -54,12 +55,10 @@
 			$db->close();
 		}
 
-		function file_download($file) 
+		public function fileDownload($file)
 		{
-			if (file_exists($file))
-			{
-				if (ob_get_level())
-				{
+			if (file_exists($file)) {
+				if (ob_get_level()) {
 					ob_end_clean();
 				}
 				header('Content-Description: File Transfer');
@@ -73,12 +72,11 @@
 				readfile($file);
 				exit;
 			}
-	}
+		}
 
-		function add_file($uploaddir, $id)
+		public function addFile($uploaddir, $id)
 		{
-			if(is_uploaded_file($_FILES["filename"]["tmp_name"]))
-			{
+			if(is_uploaded_file($_FILES["filename"]["tmp_name"])) {
 				$size = round($_FILES["filename"]["size"]/1048576, 2);
 				$path = $uploaddir.$_FILES["filename"]["name"];
 				move_uploaded_file($_FILES["filename"]["tmp_name"], $uploaddir.$_FILES["filename"]["name"]);
@@ -90,7 +88,7 @@
 				$_SESSION["error"] = "Ошибка загузки файла";
 		}
 
-		function delete_file($path)
+		public function deleteFile($path)
 		{
 			unlink($path);
 			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
@@ -98,21 +96,21 @@
 			$db->close();
 		}
 
-		function delete_all_files($id)
+		public function deleteAllFiles($id)
 		{
 			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			$db->query("delete from Files where id_user = '".$id."';");
 			$db->close();
 		}
 
-		function check_type($name)
+		public function checkType($name)
 		{
 			$type = new SplFileInfo($name);
 			$types = array ("com","bat","js","php","cmd","vb","vbs");
-			foreach ($types as $value)
+			foreach ($types as $value) {
 				if ($value == ($type->getExtension()))
 					return true;
+			}
 			return false;
 		}
 	}
-?>

@@ -5,7 +5,7 @@
 
 	session_start();
 
-	$referer=getenv("HTTP_REFERER");
+	$referer = getenv("HTTP_REFERER");
 	if ($referer != PAGE_START)
 	{
 		$_SESSION["error"] = "Неверный формат ввода";
@@ -19,20 +19,15 @@
 	$email = $_POST["email"];
 	$password = $_POST["password"];
 
-	if ($user->authorization($email, $password))
-		{
-			$_SESSION["id_user"] = $user->get_id($email);
+	if ($user->authorization($email, $password)) {
+			$_SESSION["id_user"] = $user->getId($email);
 			unset($_SESSION["error"]);
-			if (!file_exists(DIR_DISC.$email))
-			{
-				$file->delete_all_files($user->get_id($email));
+			if (!file_exists(DIR_DISC.$email)) {
+				$file->deleteAllFiles($user->get_id($email));
 				mkdir(DIR_DISC.$email);
 			}
 			header("location: ".PAGE_FILES);
-		}
-		else
-		{
-			$_SESSION["error"] = "Неверный логин или пароль";
-			header("location: ".PAGE_START);
-		}
-?>
+	} else {
+		$_SESSION["error"] = "Неверный логин или пароль";
+		header("location: ".PAGE_START);
+	}

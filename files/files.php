@@ -1,14 +1,15 @@
 <?php
-	header("Content-Type: text/html; charset=utf-8");
-
 	include "../config.php.ini";
 	include "../classes/file.class.php";
 	include "../classes/user.class.php";
 
+	header("Content-Type: text/html; charset=utf-8");
+
 	session_start();
 
-	if (empty($_SESSION["id_user"]))
+	if (empty($_SESSION["id_user"])) {
 			header("location: ".PAGE_START);
+	}
 ?>
 <!DOCTYPE html>
 <html>
@@ -24,7 +25,7 @@
 				Вы вошли, как
 				<?php
 					$user  = new User();
-					echo $user->get_email($_SESSION["id_user"]);
+					echo $user->getEmail($_SESSION["id_user"]);
 				?>
 			</div>
 			<a href="../users/logout.php" title="Выйти" class="navbar-brand glyphicon glyphicon-log-out"></a>
@@ -33,8 +34,7 @@
 		<hr>
 		<?php
 			$file = new File();
-			if ($file->count_files($_SESSION["id_user"]) > 0)
-			{
+			if ($file->countFiles($_SESSION["id_user"]) > 0) {
 				echo "<table class=\"table table-hover table-bordered\" style=\"width: 40%; margin: auto;\">
 					<thead>
 						<tr class=\alert alert-info\">
@@ -44,10 +44,10 @@
 							<th><span class=\"glyphicon glyphicon-trash\"></span></th>
 						</tr>
 					</thead>";
-				$file->show_files($_SESSION["id_user"]);
-			}
-			else
+				$file->showFiles($_SESSION["id_user"]);
+			} else {
 				echo "<div class=\"alert alert-success\">У вас ещё нет файлов</div>";
+			}
 		?>
 		</table>
 		<hr>
@@ -56,8 +56,7 @@
 			<input type="file" name="filename" id="uploadbtn" onchange="document.getElementById('upload').submit()" style="opacity: 0; z-index: -1;" for="load">
 		</form>
 		<?php
-			if (!empty($_SESSION["error"]))
-			{
+			if (!empty($_SESSION["error"])) {
 				echo "<script charset=\"utf-8\">alert(\"".$_SESSION["error"]."\");</script>";
 				unset($_SESSION["error"]);
 			}

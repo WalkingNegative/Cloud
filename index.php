@@ -1,20 +1,21 @@
 <?php
-	header("Content-Type: text/html; charset=utf-8");
-
 	include "/config.php.ini";
+
+	header("Content-Type: text/html; charset=utf-8");
 
 	session_start();
 
-	$referer=getenv("HTTP_REFERER");
+	$referer = getenv("HTTP_REFERER");
 
-	if ($referer == PAGE_REGISTRATION)
+	if ($referer == PAGE_REGISTRATION) {
 		unset($_SESSION["error"]);
+	}
 
-	if (!empty($_SESSION["id_user"]))
+	if (!empty($_SESSION["id_user"])) {
 		header("location: ".PAGE_FILES);
+	}
 
-	if (!file_exists("disc"))
-	{
+	if (!file_exists("disc")) {
 		mkdir("disc");
 	}
 ?>
@@ -41,8 +42,7 @@
 				<hr>
 				<div id="error">
 					<?php
-						if (!empty($_SESSION["error"]))
-						{
+						if (!empty($_SESSION["error"])) {
 							echo "<div class=\"alert alert-danger\">".$_SESSION["error"]."</div>";
 						}
 					?>

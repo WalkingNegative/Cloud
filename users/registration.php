@@ -1,19 +1,22 @@
 <?php
-	header("Content-Type: text/html; charset=utf-8");
-
 	require "../config.php.ini";
+
+	header("Content-Type: text/html; charset=utf-8");
 
 	session_start();
 
-	$referer=getenv("HTTP_REFERER");
-	if ($referer == PAGE_START)
+	$referer = getenv("HTTP_REFERER");
+	if ($referer == PAGE_START) {
 		unset($_SESSION["error"]);
+	}
 
-	if (!empty($_SESSION["id_user"]))
+	if (!empty($_SESSION["id_user"])) {
 		header("location: ".PAGE_FILES);
+	}
 
-	if (!empty($_SESSION["email"]))
+	if (!empty($_SESSION["email"])) {
 		header("location: ".PAGE_FILES);
+	}
 ?>
 <!DOCTYPE html>
 <html>
@@ -39,8 +42,7 @@
 			<hr>
 			<div id="error">
 				<?php
-					if (!empty($_SESSION["error"]))
-					{
+					if (!empty($_SESSION["error"])) {
 						echo "<div class=\"alert alert-danger\">".$_SESSION["error"]."</div>";
 					}
 				?>

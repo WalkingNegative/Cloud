@@ -8,9 +8,9 @@
 
 	session_start();
 
-	$path = $file->get_path($_GET["id_file"]);
+	$path = $file->getPath($_GET["id_file"]);
 		
-	if ($file->is_owner($_GET["id_file"], $_SESSION["id_user"]))
-		$file->delete_file($path);
+	if ($file->isOwner($_GET["id_file"], $_SESSION["id_user"]))
+		$file->deleteFile($path);
 	header("location: ".PAGE_FILES);
 ?>
