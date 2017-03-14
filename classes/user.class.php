@@ -62,6 +62,7 @@
 			 	}
 			 }
 			$db->close();
+			unset($_SESSION["error"]);
 			return false;
 		}
 
@@ -70,11 +71,17 @@
 			$password = password_hash($password, PASSWORD_DEFAULT);
 			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			$db->query("Insert into Users (email, pas) values ('".$email."', '".$password."');");
+			if (!file_exists(DIR_DISC.$email)) {
+				$file->deleteAllFiles($user->getId($email));
+				mkdir(DIR_DISC.$email);
+			}
 			$db->close();
+			unset($_SESSION["error"]);
 		}
 
 		public function clearText($text)
 		{
+			$text = str_replace(" ", "", $text);
 			$text = htmlentities($text, ENT_QUOTES, "UTF-8");
 			return $text;
 		}

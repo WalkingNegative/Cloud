@@ -1,9 +1,11 @@
 <?php
-	include "../config.php.ini";
-	include "../classes/file.class.php";
-	include "../classes/user.class.php";
+	require "../config.php.ini";
+	require "../classes/file.class.php";
+	require "../classes/user.class.php";
 
 	header("Content-Type: text/html; charset=utf-8");
+
+	File::checkNavigation(PAGE_FILES);
 
 	session_start();
 

@@ -40,21 +40,6 @@
 			return false;
 		}
 
-		public function showFiles($id)
-		{
-			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-			settype($id, 'integer');
-			$query = $db->query("select * from Files where id_user = ".$id." order by id_file DESC;");
-			while ($files = $query->fetch_assoc()) {
-				echo "<tr>";
-				echo "<td>".$files['file_name']."</td><td>".$files['size']."</td>";
-				echo "<td><a href=\"".PAGE_DOWNLOAD.$files['id_file']."\">Скачать </a></td>";
-				echo "<td><a href=\"".PAGE_REMOVE.$files['id_file']."\"> Удалить </a></td>";
-				echo "</tr>";
-			}
-			$db->close();
-		}
-
 		public function fileDownload($file)
 		{
 			if (file_exists($file)) {
@@ -68,7 +53,7 @@
 				header('Expires: 0');
 				header('Cache-Control: must-revalidate');
 				header('Pragma: public');
-				header('Content-Length: ' . filesize($file));
+				header('Content-Length: '.filesize($file));
 				readfile($file);
 				exit;
 			}
@@ -112,5 +97,14 @@
 					return true;
 			}
 			return false;
+		}
+
+		public static function checkNavigation($page)
+		{
+			$referer = getenv("HTTP_REFERER");
+			if ($referer != $page) {
+				header("location: ".$page);
+				exit;
+			}
 		}
 	}

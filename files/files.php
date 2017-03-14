@@ -30,8 +30,6 @@
 			</div>
 			<a href="../users/logout.php" title="Выйти" class="navbar-brand glyphicon glyphicon-log-out"></a>
 		</nav>
-		
-		<hr>
 		<?php
 			$file = new File();
 			if ($file->countFiles($_SESSION["id_user"]) > 0) {
@@ -44,13 +42,22 @@
 							<th><span class=\"glyphicon glyphicon-trash\"></span></th>
 						</tr>
 					</thead>";
-				$file->showFiles($_SESSION["id_user"]);
+				$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+				settype($id, 'integer');
+				$query = $db->query("select * from Files where id_user = ".$_SESSION["id_user"]." order by id_file DESC;");
+				while ($files = $query->fetch_assoc()) {
+					echo "<tr>";
+					echo "<td>".$files['file_name']."</td><td>".$files['size']."</td>";
+					echo "<td><a href=\"".PAGE_DOWNLOAD.$files['id_file']."\">Скачать </a></td>";
+					echo "<td><a href=\"".PAGE_REMOVE.$files['id_file']."\"> Удалить </a></td>";
+					echo "</tr>";
+				}
+				$db->close();
 			} else {
 				echo "<div class=\"alert alert-success\">У вас ещё нет файлов</div>";
 			}
 		?>
 		</table>
-		<hr>
 		<form action="load.php" method="post" enctype="multipart/form-data" id="upload" style="margin: auto;">
 			<h3><span class="label label-primary"><label for="uploadbtn">Загрузить файл</label></span></h3>
 			<input type="file" name="filename" id="uploadbtn" onchange="document.getElementById('upload').submit()" style="opacity: 0; z-index: -1;" for="load">

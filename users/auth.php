@@ -1,32 +1,22 @@
 <?php
-	include "../config.php.ini";
-	include "../classes/file.class.php";
-	include "../classes/user.class.php";
+	require "../config.php.ini";
+	require "../classes/file.class.php";
+	require "../classes/user.class.php";
+
+	File::checkNavigation(PAGE_START);
 
 	session_start();
-
-	$referer = getenv("HTTP_REFERER");
-	if ($referer != PAGE_START)
-	{
-		$_SESSION["error"] = "Неверный формат ввода";
-		header("location: ".PAGE_START);
-		exit;
-	}
 
 	$user = new User();
 	$file = new File();
 
-	$email = $_POST["email"];
-	$password = $_POST["password"];
+	$email = $user->clearText($_POST["email"]);
+	$password = $user->clearText($_POST["password"]);
 
 	if ($user->authorization($email, $password)) {
-			$_SESSION["id_user"] = $user->getId($email);
-			unset($_SESSION["error"]);
-			if (!file_exists(DIR_DISC.$email)) {
-				$file->deleteAllFiles($user->get_id($email));
-				mkdir(DIR_DISC.$email);
-			}
-			header("location: ".PAGE_FILES);
+		$_SESSION["id_user"] = $user->getId($email);
+		unset($_SESSION["error"]);
+		header("location: ".PAGE_FILES);
 	} else {
 		$_SESSION["error"] = "Неверный логин или пароль";
 		header("location: ".PAGE_START);

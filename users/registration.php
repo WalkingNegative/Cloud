@@ -13,10 +13,6 @@
 	if (!empty($_SESSION["id_user"])) {
 		header("location: ".PAGE_FILES);
 	}
-
-	if (!empty($_SESSION["email"])) {
-		header("location: ".PAGE_FILES);
-	}
 ?>
 <!DOCTYPE html>
 <html>
