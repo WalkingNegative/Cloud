@@ -20,9 +20,11 @@
 		public function countFiles($id)
 		{
 			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-			settype($id, 'integer');
-			$query = $db->query("select * from Files where id_user = ".$id." order by id_file DESC;");
-			$result = $query->num_rows;
+			$stmt = $db->prepare("select id_file from Files where id_user = ?;");
+			$stmt->bind_param("i", $id);
+			$stmt->execute();
+			$stmt->store_result();
+			$result = $stmt->num_rows;
 			$db->close();
 			return $result;
 		}
@@ -66,7 +68,9 @@
 				$path = $uploaddir.$_FILES["filename"]["name"];
 				move_uploaded_file($_FILES["filename"]["tmp_name"], $uploaddir.$_FILES["filename"]["name"]);
 				$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-				$db->query("insert into Files (file_name, path, id_user, size) values ('".$_FILES["filename"]["name"]."', '".$path."', ".$id.", ".$size.");");
+				$stmt = $db->prepare("insert into Files (file_name, path, id_user, size) values (?, ?, ? ,?);");
+				$stmt->bind_param("ssid", $_FILES["filename"]["name"], $path, $id, $size);
+				$stmt->execute();
 				$db->close();
 			} 
 			else
@@ -77,14 +81,18 @@
 		{
 			unlink($path);
 			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-			$db->query("delete from Files where path = '".$path."';");
+			$stmt = $db->prepare("delete from Files where path = ?;");
+			$stmt->bind_param("s", $path);
+			$stmt->execute();
 			$db->close();
 		}
 
 		public function deleteAllFiles($id)
 		{
 			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-			$db->query("delete from Files where id_user = '".$id."';");
+			$stmt = $db->prepare("delete from Files where id_user = ?;");
+			$stmt->bind_param("i", $id);
+			$stmt->execute();
 			$db->close();
 		}
 

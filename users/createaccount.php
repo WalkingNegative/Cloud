@@ -5,7 +5,7 @@
 
 	header("Content-Type: text/html; charset=utf-8");
 
-	File::checkNavigation(PAGE_START);
+	File::checkNavigation(PAGE_REGISTRATION	);
 
 	session_start();
 	$user = new User();
@@ -19,7 +19,7 @@
 		exit;
 	}
 			
-	$user->newUser($email, $password)
+	$user->newUser($email, $password);
 
 	$_SESSION["id_user"] = $user->getId($email);
 	header("location: ".PAGE_FILES);

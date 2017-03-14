@@ -70,9 +70,10 @@
 		{
 			$password = password_hash($password, PASSWORD_DEFAULT);
 			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-			$db->query("Insert into Users (email, pas) values ('".$email."', '".$password."');");
+			$stmt = $db->prepare("Insert into Users (email, pas) values (?, ?);");
+			$stmt->bind_param("ss", $email, $password);
+			$stmt->execute();
 			if (!file_exists(DIR_DISC.$email)) {
-				$file->deleteAllFiles($user->getId($email));
 				mkdir(DIR_DISC.$email);
 			}
 			$db->close();
