@@ -1,9 +1,8 @@
 <?php
-	include "/config.php.ini";
+	require "/config.php.ini";
 
 	header("Content-Type: text/html; charset=utf-8");
 
-	session_start();
 
 	$referer = getenv("HTTP_REFERER");
 

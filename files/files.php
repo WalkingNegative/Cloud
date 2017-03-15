@@ -1,7 +1,7 @@
 <?php
-	include "../config.php.ini";
-	include "../classes/file.class.php";
-	include "../classes/user.class.php";
+	require "../config.php.ini";
+	require "../classes/file.class.php";
+	require "../classes/user.class.php";
 
 	header("Content-Type: text/html; charset=utf-8");
 
@@ -9,7 +9,10 @@
 
 	if (empty($_SESSION["id_user"])) {
 			header("location: ".PAGE_START);
+			exit;
 	}
+
+	User::checkUsersOnline();
 ?>
 <!DOCTYPE html>
 <html>
@@ -60,15 +63,22 @@
 			}
 		?>
 		</table>
-		<form action="load.php" method="post" enctype="multipart/form-data" id="upload" style="margin: auto;">
+		<form action="load.php" method="post" enctype="multipart/form-data" id="upload" style="position: relative; float: top; float: left; margin: auto; width: 20%">
 			<h3><span class="label label-primary"><label for="uploadbtn">Загрузить файл</label></span></h3>
 			<input type="file" name="filename" id="uploadbtn" onchange="document.getElementById('upload').submit()" style="opacity: 0; z-index: -1;" for="load">
 		</form>
-		<?php
-			if (!empty($_SESSION["error"])) {
-				echo "<script charset=\"utf-8\">alert(\"".$_SESSION["error"]."\");</script>";
-				unset($_SESSION["error"]);
-			}
-		?>
+		<div class="panel panel-primary" style="position: relative; float: right; width: 20%;">
+			<div class="panel-heading">
+				Пользователи онлайн
+			</div>
+  			<div class="panel-body">
+    			<?php
+					$users = $user->getUsersOnline();
+					while ($arr = $users->fetch_assoc()) {
+						echo $user->getEmail($arr["id_user"])."<br>";
+					}
+				?>
+  			</div>
+		</div>
 	</body>
 </html>

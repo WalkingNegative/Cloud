@@ -1,4 +1,3 @@
-drop database Cloud;
 create database Cloud;
 
 use Cloud;
@@ -22,6 +21,14 @@ CREATE TABLE `Files` (
         ON DELETE CASCADE
 );
 
+CREATE TABLE `Sessions` ( 
+  `id_session` tinytext NOT NULL, 
+  `putdate` datetime NOT NULL default '0000-00-00 00:00:00', 
+  `id_user` tinytext NOT NULL 
+);
+
 select * from Users;
 
+select * from Files;
 
+select * from Sessions;
