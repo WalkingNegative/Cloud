@@ -35,33 +35,29 @@
 		</nav>
 		<?php
 			$file = new File();
-			if ($file->countFiles($_SESSION["id_user"]) > 0) {
-				echo "<table class=\"table table-hover table-bordered\" style=\"width: 40%; margin: auto;\">
+			if ($file->countFiles($_SESSION["id_user"]) > 0): ?>
+				<table class="table table-hover table-bordered" style="width: 40%; margin: auto;">
 					<thead>
-						<tr class=\alert alert-info\">
+						<tr class="alert alert-info">
 							<th>Имя файла</th>
 							<th>Размер</th>
-							<th><span class=\"glyphicon glyphicon-download-alt\"></span></th>
-							<th><span class=\"glyphicon glyphicon-trash\"></span></th>
+							<th><span class="glyphicon glyphicon-download-alt"></span></th>
+							<th><span class="glyphicon glyphicon-trash"></span></th>
 						</tr>
-					</thead>";
-				$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-				$stmt = $db->prepare("select id_file, file_name, size from Files where id_user = ? order by id_file DESC;");
-				$stmt->bind_param("i", $_SESSION["id_user"]);
-				$stmt->execute();
-				$result = $stmt->bind_result($id_file, $file_name, $size);
-				while ($stmt->fetch()) {
-					echo "<tr>";
-					echo "<td>".$file_name."</td><td>".$size."</td>";
-					echo "<td><a href=\"".PAGE_DOWNLOAD.$id_file."\">Скачать </a></td>";
-					echo "<td><a href=\"".PAGE_REMOVE.$id_file."\"> Удалить </a></td>";
-					echo "</tr>";
-				}
-				$db->close();
-			} else {
-				echo "<div class=\"alert alert-success\">У вас ещё нет файлов</div>";
-			}
-		?>
+					</thead>
+				<?php
+					$stmt = $file->getFiles($_SESSION["id_user"]);
+					while ($row = $stmt->fetch_array(MYSQLI_NUM)): ?>
+						<tr>
+						<td><?= $row[1] ?></td>
+						<td><?= $row[2] ?></td>
+						<td><a href="<?=PAGE_DOWNLOAD.$row[0]?>">Скачать </a></td>
+						<td><a href="<?=PAGE_REMOVE.$row[0]?>"> Удалить </a></td>
+						</tr>
+					<?php endwhile; ?>
+			<?php else: ?>
+				<div class="alert alert-success">У вас ещё нет файлов</div>
+			<?php endif; ?>
 		</table>
 		<form action="load.php" method="post" enctype="multipart/form-data" id="upload" style="position: relative; float: top; float: left; margin: auto; width: 20%">
 			<h3><span class="label label-primary"><label for="uploadbtn">Загрузить файл</label></span></h3>

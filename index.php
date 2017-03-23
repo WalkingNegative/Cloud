@@ -3,6 +3,7 @@
 
 	header("Content-Type: text/html; charset=utf-8");
 
+	session_start();
 
 	$referer = getenv("HTTP_REFERER");
 
@@ -33,11 +34,10 @@
 		<form action="users/auth.php"  method="post" enctype="multipart/form-data" name="login_form" id="form" role="form" style="width: 20%; margin: auto; margin-top: 15%;" onsubmit="onSubmit()">
 			<div class="form-group">
 				<label for="email">Эл. почта</label>
-				<input type="text" name="email" value="" placeholder="Введите эл. почту" id="email" class="form-control" maxlength="30">
+				<input type="text" name="email"  placeholder="Введите эл. почту" id="email" class="form-control" maxlength="30">
 				<br>
 				<label for="pas">Пароль</label>
-				<input type="password"  id="pas" value="" placeholder="Введите пароль" class="form-control" maxlength="35">
-				<input type="hidden" name="password" id="password" value="">
+				<input type="password"  name="password" placeholder="Введите пароль" class="form-control" maxlength="35">
 				<hr>
 				<div id="error">
 					<?php
@@ -46,9 +46,8 @@
 						}
 					?>
 				</div>
-				<input type="submit" name="" value="Войти" class="btn btn-primary">
-				<a href="users/registration.php" title="">
-				<input type="button" name="" value="Регистрация" class="btn btn-success"></a>
+				<input type="submit" value="Войти" class="btn btn-primary">
+				<a href="users/registration.php" class="btn btn-success">Регистрация</a>
 			</div>
 		</form>
 	</body>

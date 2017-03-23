@@ -1,39 +1,50 @@
 <?php
-	include_once("../config.php.ini");
+	require_once("../config.php.ini");
+	require_once("abstractmodel.class.php");
 	
-	class File 
+	class File extends AbstractModel
 	{
+		protected $db;
+
+		public function __construct()
+		{
+			$this->db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+		}
+
 		public function isOwner($id_user, $id_file)
 		{
-			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-			$query = $db->query("select * from Files;");
+			$query = $this->db->query("select * from Files;");
 			while($files = $query->fetch_assoc()) {
 				if (($files["id_file"] == $id_file) && ($files["id_user"] == $id_user)) {
-					$db->close();
 					return true;
 				}
 			}
-			$db->close();
 			return false;
 		}
 
 		public function countFiles($id)
 		{
-			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-			$stmt = $db->prepare("select id_file from Files where id_user = ?;");
+			$stmt = $this->db->prepare("select id_file from Files where id_user = ?;");
 			$stmt->bind_param("i", $id);
 			$stmt->execute();
 			$stmt->store_result();
 			$result = $stmt->num_rows;
-			$db->close();
+			return $result;
+		}
+
+		public function getFiles($id)
+		{
+			$stmt = $this->db->prepare("select id_file, file_name, size from Files where id_user = ? order by id_file DESC;");
+			$stmt->bind_param("i", $id);
+			$stmt->execute();
+			$result = $stmt->get_result();
 			return $result;
 		}
 
 		public function getPath($id)
 		{
-			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 			settype($id, 'integer');
-			$query = $db->query("select * from Files;");
+			$query = $this->db->query("select * from Files;");
 			while($files = $query->fetch_assoc()) {
 				if ($files["id_file"] == $id) {
 					return $files["path"];
@@ -67,11 +78,9 @@
 				$size = round($_FILES["filename"]["size"]/1048576, 2);
 				$path = $uploaddir.$_FILES["filename"]["name"];
 				move_uploaded_file($_FILES["filename"]["tmp_name"], $uploaddir.$_FILES["filename"]["name"]);
-				$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-				$stmt = $db->prepare("insert into Files (file_name, path, id_user, size) values (?, ?, ? ,?);");
+				$stmt = $this->db->prepare("insert into Files (file_name, path, id_user, size) values (?, ?, ? ,?);");
 				$stmt->bind_param("ssid", $_FILES["filename"]["name"], $path, $id, $size);
 				$stmt->execute();
-				$db->close();
 			} 
 			else
 				$_SESSION["error"] = "Ошибка загузки файла";
@@ -80,20 +89,16 @@
 		public function deleteFile($path)
 		{
 			unlink($path);
-			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-			$stmt = $db->prepare("delete from Files where path = ?;");
+			$stmt = $this->db->prepare("delete from Files where path = ?;");
 			$stmt->bind_param("s", $path);
 			$stmt->execute();
-			$db->close();
 		}
 
 		public function deleteAllFiles($id)
 		{
-			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-			$stmt = $db->prepare("delete from Files where id_user = ?;");
+			$stmt = $this->db->prepare("delete from Files where id_user = ?;");
 			$stmt->bind_param("i", $id);
 			$stmt->execute();
-			$db->close();
 		}
 
 		public function checkType($name)

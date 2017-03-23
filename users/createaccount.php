@@ -12,14 +12,13 @@
 	$file = new File();
 	$email = $user->clearText($_POST["email"]);
 	$password = $user->clearText($_POST["password"]);
-	
-	if ($user->isExistEmail($email)) {
-		$_SESSION["error"] = "Такой пользователь уже существует!";
-		header("location:".PAGE_REGISTRATION);
+			
+	if (!$user->newUser($email, $password))
+	{
+		$_SESSION["error"] = "Неверные данные";
+		header("location: ".PAGE_REGISTRATION);
 		exit;
 	}
-			
-	$user->newUser($email, $password);
 
 	$_SESSION["id_user"] = $user->getId($email);
 	header("location: ".PAGE_FILES);

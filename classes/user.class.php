@@ -1,12 +1,19 @@
 <?php
-	include_once("../config.php.ini");
+	require_once("../config.php.ini");
+	require_once("abstractmodel.class.php");
 
-	class User
+	class User extends AbstractModel
 	{
+		protected $db;
+		
+		public function __construct()
+		{
+			$this->db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+		}
+
 		public function getId($email)
 		{
-			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-			$query = $db->query("select * from Users;");
+			$query = $this->db->query("select * from Users;");
 			while($users = $query->fetch_assoc()) {
 				if ($users["email"] == $email) {
 					return $users["id_user"];
@@ -16,8 +23,7 @@
 
 		public function getEmail($id)
 		{
-			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-			$query = $db->query("select * from Users;");
+			$query = $this->db->query("select * from Users;");
 			while($users = $query->fetch_assoc()) {
 				if ($users["id_user"] == $id) {
 					return $users["email"];
@@ -39,45 +45,46 @@
 
 		public function isExistEmail($email)
 		{
-			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-			$query = $db->query("Select * From Users;");
+			$query = $this->db->query("Select * From Users;");
 			while($users = $query->fetch_assoc()) {
 				if (($users['email'] == $email)) {
 					return true;
 				}
 			}
-			$db->close();
 			return false;
 		}
 
 		public function authorization($email, $password)
 		{
-			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-			$query = $db->query("Select * From Users;");
+			if (!$this->checkEmail($email) || (strlen($password) < 8)) {
+				return false;
+			}
+			$query = $this->db->query("Select * From Users;");
 			while($users = $query->fetch_assoc()) {
-				if (($users["email"] == $email) && password_verify($password, $users["pas"]))
-			 	{
-			 		$db->close();
+				if (($users["email"] == $email) && password_verify($password, $users["password"])) {
 			 		return true;
 			 	}
 			 }
-			$db->close();
 			unset($_SESSION["error"]);
 			return false;
 		}
 
 		public function newUser($email, $password)
 		{
+			if (!$this->checkEmail($email) || (strlen($password) < 8) || $this->isExistEmail($email))
+			{
+				return false;
+			}
 			$password = password_hash($password, PASSWORD_DEFAULT);
-			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-			$stmt = $db->prepare("Insert into Users (email, pas) values (?, ?);");
+			echo $email." ".$password." ".strlen($password);
+			$stmt = $this->db->prepare("Insert into Users (email, password) values (?, ?);");
 			$stmt->bind_param("ss", $email, $password);
 			$stmt->execute();
 			if (!file_exists(DIR_DISC.$email)) {
 				mkdir(DIR_DISC.$email);
 			}
-			$db->close();
 			unset($_SESSION["error"]);
+			return true;
 		}
 
 		public function clearText($text)
@@ -89,8 +96,8 @@
 
 		public static function checkUsersOnline()
 		{
-			$id_session = session_id(); 
-			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+			$id_session = session_id();
+			$db = parent::connectBd();  
 			$stmt = $db->prepare("select * from Sessions where id_session = ?"); 
 			$stmt->bind_param("s", $id_session);
 			$stmt->execute();
@@ -108,11 +115,8 @@
 		}
 
 		public function getUsersOnline()
-		{
-			$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-			$result = $db->query("select * from Sessions order by id_user;"); 
-			$db->close();
-			return $result;
+		{ 
+			return $this->db->query("select * from Sessions order by id_user;");
 		}
 
 	}

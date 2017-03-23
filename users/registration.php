@@ -25,14 +25,13 @@
 		<script type="text/javascript" src="../js/handler.js"></script>
 	</head>
 	<body>
-		<form action="createaccount.php" method="post" accept-charset="utf-8" id="form" role="form" style="width: 20%; margin: auto; margin-top: 15%;" onsubmit="onSubmit()">
+		<form action="createaccount.php" method="post" accept-charset="utf-8" id="form" role="form" style="width: 20%; margin: auto; margin-top: 15%;">
 			<div class="form-group">
 				<label for="email">Эл. почта</label>
 				<input type="text" name="email" id="email" value="" placeholder="Введите эл. почту" class="form-control" maxlength="30">
 				<br>
 				<label for="password">Пароль</label>
-				<input type="password"  id="pas" value="" placeholder="Введите пароль" class="form-control" maxlength="35">
-				<input type="hidden" name="password" id="password" value="">
+				<input type="password"  name="password" value="" placeholder="Введите пароль" class="form-control" maxlength="35">
 				<div class="error">
 			</div>
 			<hr>
