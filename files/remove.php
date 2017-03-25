@@ -4,9 +4,8 @@
 
 	header("Content-Type: text/html; charset=utf-8");
 
-	File::checkNavigation(PAGE_FILES);
-
 	$file = new File();
+	$referer = getenv("HTTP_REFERER");
 
 	session_start();
 
@@ -14,4 +13,4 @@
 	if ($file->isOwner($_SESSION["id_user"], $_GET["id_file"])) {
 		$file->deleteFile($path);
 	}
-	header("location: ".PAGE_FILES);
+	header("location: ".$referer);

@@ -16,7 +16,7 @@
 	if ($user->authorization($email, $password)) {
 		$_SESSION["id_user"] = $user->getId($email);
 		unset($_SESSION["error"]);
-		header("location: ".PAGE_FILES);
+		header("location: ".PAGE_MYFILES);
 	} else {
 		$_SESSION["error"] = "Неверный логин или пароль";
 		header("location: ".PAGE_START);

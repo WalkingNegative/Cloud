@@ -5,15 +5,17 @@
 
 	header("Content-Type: text/html; charset=utf-8");
 
-	File::checkNavigation(PAGE_REGISTRATION	);
+	File::checkNavigation(PAGE_REGISTRATION);
 
 	session_start();
 	$user = new User();
 	$file = new File();
+	$name = $user->clearText($_POST["name"]);
+	$surname = $user->clearText($_POST["surname"]);
 	$email = $user->clearText($_POST["email"]);
 	$password = $user->clearText($_POST["password"]);
 			
-	if (!$user->newUser($email, $password))
+	if (!$user->newUser($email, $password, $name, $surname))
 	{
 		$_SESSION["error"] = "Неверные данные";
 		header("location: ".PAGE_REGISTRATION);
@@ -21,4 +23,4 @@
 	}
 
 	$_SESSION["id_user"] = $user->getId($email);
-	header("location: ".PAGE_FILES);
+	header("location: ".PAGE_MYFILES);

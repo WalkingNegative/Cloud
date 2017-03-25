@@ -11,7 +11,7 @@
 	}
 
 	if (!empty($_SESSION["id_user"])) {
-		header("location: ".PAGE_FILES);
+		header("location: ".PAGE_MYFILES);
 	}
 ?>
 <!DOCTYPE html>
@@ -25,13 +25,19 @@
 		<script type="text/javascript" src="../js/handler.js"></script>
 	</head>
 	<body>
-		<form action="createaccount.php" method="post" accept-charset="utf-8" id="form" role="form" style="width: 20%; margin: auto; margin-top: 15%;">
+		<form action="createaccount.php" method="post" accept-charset="utf-8" id="form" role="form" style="width: 20%; margin: auto; margin-top: 10%;">
 			<div class="form-group">
+				<label for="name">Имя</label>
+				<input type="text" name="name" placeholder="Введите имя" class="form-control" maxlength="30">
+				<br>
+				<label for="surname">Фамилия</label>
+				<input type="text"  name="surname" placeholder="Введите фамилию" class="form-control" maxlength="35">
+				<br>
 				<label for="email">Эл. почта</label>
-				<input type="text" name="email" id="email" value="" placeholder="Введите эл. почту" class="form-control" maxlength="30">
+				<input type="text" name="email" id="email" placeholder="Введите эл. почту" class="form-control" maxlength="30">
 				<br>
 				<label for="password">Пароль</label>
-				<input type="password"  name="password" value="" placeholder="Введите пароль" class="form-control" maxlength="35">
+				<input type="password"  name="password" placeholder="Введите пароль" class="form-control" maxlength="35">
 				<div class="error">
 			</div>
 			<hr>
@@ -42,7 +48,7 @@
 					}
 				?>
 			</div>
-			<input type="submit" name="" value="Регистрация" class="btn btn-primary" style="position: relative; float: left;">
+			<input type="submit" value="Регистрация" class="btn btn-primary" style="position: relative; float: left;">
 			<h1>
 				<a href="../index.php" title="Авторизация" class="navbar-brand glyphicon glyphicon-log-out" style="position: relative; float: right; margin-top: -5%;"></a>
 			</h1>

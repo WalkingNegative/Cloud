@@ -7,6 +7,8 @@ SET SQL_SAFE_UPDATES = 0;
  
 CREATE TABLE `Users` (
     `id_user` INT AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(20) NOT NULL,
+    `surname` VARCHAR(20) NOT NULL,
     `email` VARCHAR(30) NOT NULL,
     `password` CHAR(255) NOT NULL
 );
@@ -17,7 +19,7 @@ CREATE TABLE `Files` (
     `path` VARCHAR(500) NOT NULL,
     `id_user` INT NOT NULL,
     `size` DOUBLE NOT NULL,
-    #`access` varchar(7) not null,
+    `access` varchar(7) not null,
     FOREIGN KEY (id_user)
         REFERENCES Users (id_user)
         ON DELETE CASCADE

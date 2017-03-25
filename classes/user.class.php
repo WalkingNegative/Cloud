@@ -21,12 +21,12 @@
 			}
 		}
 
-		public function getEmail($id)
+		public function getInfo($id)
 		{
 			$query = $this->db->query("select * from Users;");
 			while($users = $query->fetch_assoc()) {
 				if ($users["id_user"] == $id) {
-					return $users["email"];
+					return [$users["name"], $users["surname"], $users["email"]];
 				}
 			}
 			return false;
@@ -69,7 +69,7 @@
 			return false;
 		}
 
-		public function newUser($email, $password)
+		public function newUser($email, $password, $name, $surname)
 		{
 			if (!$this->checkEmail($email) || (strlen($password) < 8) || $this->isExistEmail($email))
 			{
@@ -77,8 +77,8 @@
 			}
 			$password = password_hash($password, PASSWORD_DEFAULT);
 			echo $email." ".$password." ".strlen($password);
-			$stmt = $this->db->prepare("Insert into Users (email, password) values (?, ?);");
-			$stmt->bind_param("ss", $email, $password);
+			$stmt = $this->db->prepare("Insert into Users (email, password, name, surname) values (?, ?, ?, ?);");
+			$stmt->bind_param("ssss", $email, $password, $name, $surname);
 			$stmt->execute();
 			if (!file_exists(DIR_DISC.$email)) {
 				mkdir(DIR_DISC.$email);
@@ -117,6 +117,11 @@
 		public function getUsersOnline()
 		{ 
 			return $this->db->query("select * from Sessions order by id_user;");
+		}
+
+		public function getAllUsers()
+		{ 
+			return $this->db->query("select * from Users order by id_user;");
 		}
 
 	}

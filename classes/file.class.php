@@ -24,8 +24,12 @@
 
 		public function countFiles($id)
 		{
-			$stmt = $this->db->prepare("select id_file from Files where id_user = ?;");
-			$stmt->bind_param("i", $id);
+			if ($id > 0) {
+				$stmt = $this->db->prepare("select id_file from Files where id_user = ? and access = 'private';");
+				$stmt->bind_param("i", $id);
+			} else {
+				$stmt = $this->db->prepare("select id_file from Files where access = 'public';");
+			}
 			$stmt->execute();
 			$stmt->store_result();
 			$result = $stmt->num_rows;
@@ -34,8 +38,12 @@
 
 		public function getFiles($id)
 		{
-			$stmt = $this->db->prepare("select id_file, file_name, size from Files where id_user = ? order by id_file DESC;");
-			$stmt->bind_param("i", $id);
+			if ($id > 0) {
+				$stmt = $this->db->prepare("select id_file, file_name, size from Files where id_user = ? and access = 'private' order by id_file DESC;");
+				$stmt->bind_param("i", $id);
+			} else {
+				$stmt = $this->db->prepare("select id_file, file_name, size from Files where access = 'public' order by id_file DESC;");
+			}
 			$stmt->execute();
 			$result = $stmt->get_result();
 			return $result;
@@ -74,12 +82,14 @@
 
 		public function addFile($uploaddir, $id)
 		{
+			$referer = getenv("HTTP_REFERER");
+			$access = $referer == PAGE_MYFILES ? 'private' : 'public';
 			if(is_uploaded_file($_FILES["filename"]["tmp_name"])) {
 				$size = round($_FILES["filename"]["size"]/1048576, 2);
 				$path = $uploaddir.$_FILES["filename"]["name"];
 				move_uploaded_file($_FILES["filename"]["tmp_name"], $uploaddir.$_FILES["filename"]["name"]);
-				$stmt = $this->db->prepare("insert into Files (file_name, path, id_user, size) values (?, ?, ? ,?);");
-				$stmt->bind_param("ssid", $_FILES["filename"]["name"], $path, $id, $size);
+				$stmt = $this->db->prepare("insert into Files (file_name, path, id_user, size, access) values (?, ?, ? , ?, ?);");
+				$stmt->bind_param("ssids", $_FILES["filename"]["name"], $path, $id, $size, $access);
 				$stmt->execute();
 			} 
 			else

@@ -4,14 +4,18 @@
 
 	header("Content-Type: text/html; charset=utf-8");
 
-	File::checkNavigation(PAGE_FILES);
-
 	$file = new File();
+	$referer = getenv("HTTP_REFERER");
+	$path = $file->getPath($_GET["id_file"]);
+
 	session_start();
 	
-	$path = $file->getPath($_GET["id_file"]);
-	if ($file->isOwner($_SESSION["id_user"], $_GET["id_file"])) {
+	$referer = getenv("HTTP_REFERER");
+	if ($referer == PAGE_MYFILES) {
+		if ($file->isOwner($_SESSION["id_user"], $_GET["id_file"])) {
+			$file->fileDownload($path);
+		}
+	} else {
 		$file->fileDownload($path);
 	}
-	
-	header("location: ".PAGE_FILES);
+	header("location: ".$referer);

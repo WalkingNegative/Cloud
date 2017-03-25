@@ -12,7 +12,7 @@
 	}
 
 	if (!empty($_SESSION["id_user"])) {
-		header("location: ".PAGE_FILES);
+		header("location: ".PAGE_MYFILES);
 	}
 
 	if (!file_exists("disc")) {
