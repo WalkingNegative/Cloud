@@ -10,12 +10,11 @@
 
 	session_start();
 	
-	$referer = getenv("HTTP_REFERER");
 	if ($referer == PAGE_MYFILES) {
 		if ($file->isOwner($_SESSION["id_user"], $_GET["id_file"])) {
 			$file->fileDownload($path);
 		}
-	} else {
+	} elseif ($referer == PAGE_ALLFILES) {
 		$file->fileDownload($path);
 	}
-	header("location: ".$referer);
+	header("location: ".PAGE_MYFILES);

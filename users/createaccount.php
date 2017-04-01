@@ -10,10 +10,10 @@
 	session_start();
 	$user = new User();
 	$file = new File();
-	$name = $user->clearText($_POST["name"]);
-	$surname = $user->clearText($_POST["surname"]);
-	$email = $user->clearText($_POST["email"]);
-	$password = $user->clearText($_POST["password"]);
+	$name = $_POST["name"];
+	$surname = $_POST["surname"];
+	$email = $_POST["email"];
+	$password = $_POST["password"];
 			
 	if (!$user->newUser($email, $password, $name, $surname))
 	{

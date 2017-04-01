@@ -13,59 +13,64 @@
 
 		public function getId($email)
 		{
-			$query = $this->db->query("select * from Users;");
-			while($users = $query->fetch_assoc()) {
-				if ($users["email"] == $email) {
-					return $users["id_user"];
-				}
-			}
+			$stmt = $this->db->prepare("Select id_user From Users where email = ?;");
+			$stmt->bind_param('s', $email);
+			$stmt->execute();
+			$stmt->bind_result($id_user);
+			$stmt->fetch();
+			return $id_user;
 		}
 
 		public function getInfo($id)
 		{
-			$query = $this->db->query("select * from Users;");
-			while($users = $query->fetch_assoc()) {
-				if ($users["id_user"] == $id) {
-					return [$users["name"], $users["surname"], $users["email"]];
-				}
+			$stmt = $this->db->prepare("Select name, surname, email From Users where id_user = ?;");
+			$stmt->bind_param('i', $id);
+			$stmt->execute();
+			$stmt->bind_result($name, $surname, $email);
+			$stmt->store_result();
+			$stmt->fetch();
+			if ($stmt->num_rows == 1) {
+				return [$name, $surname, $email];
 			}
 			return false;
 		}
 
 		public function checkEmail($email)
 		{
-			$regex = '/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/';
-			preg_match($regex, $email, $result);
-			if (empty($result)) {
-				return false;
-			} else  {
+			if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 				return true;
-			}
-		}
-
-		public function isExistEmail($email)
-		{
-			$query = $this->db->query("Select * From Users;");
-			while($users = $query->fetch_assoc()) {
-				if (($users['email'] == $email)) {
-					return true;
-				}
 			}
 			return false;
 		}
 
-		public function authorization($email, $password)
+		public function isExistEmail($email)
 		{
-			if (!$this->checkEmail($email) || (strlen($password) < 8)) {
+			$stmt = $this->db->prepare("Select * From Users = ?;");
+			$stmt->bind_param('s', $email);
+			$stmt->execute();
+			$stmt->store_result();
+				if ($stmt->num_rows != 0) {
+					return true;
+				}
+			return false;
+		}
+
+		public function authorization($email, $pas)
+		{
+			if (!$this->checkEmail($email) || (strlen($pas) < 8)) {
 				return false;
 			}
-			$query = $this->db->query("Select * From Users;");
-			while($users = $query->fetch_assoc()) {
-				if (($users["email"] == $email) && password_verify($password, $users["password"])) {
+			$stmt = $this->db->prepare("Select password From Users where email = ?;");
+			$stmt->bind_param('s', $email);
+			$stmt->execute();
+			$stmt->bind_result($password);
+			$stmt->store_result();
+			$stmt->fetch();
+			if ($stmt->num_rows == 1) {
+				if (password_verify($pas, $password)) {
 			 		return true;
-			 	}
-			 }
-			unset($_SESSION["error"]);
+				}
+			}
 			return false;
 		}
 
@@ -83,15 +88,7 @@
 			if (!file_exists(DIR_DISC.$email)) {
 				mkdir(DIR_DISC.$email);
 			}
-			unset($_SESSION["error"]);
 			return true;
-		}
-
-		public function clearText($text)
-		{
-			$text = str_replace(" ", "", $text);
-			$text = htmlentities($text, ENT_QUOTES, "UTF-8");
-			return $text;
 		}
 
 		public static function checkUsersOnline()

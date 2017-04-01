@@ -10,8 +10,8 @@
 	$user = new User();
 	$file = new File();
 
-	$email = $user->clearText($_POST["email"]);
-	$password = $user->clearText($_POST["password"]);
+	$email = $_POST["email"];
+	$password = $_POST["password"];
 
 	if ($user->authorization($email, $password)) {
 		$_SESSION["id_user"] = $user->getId($email);

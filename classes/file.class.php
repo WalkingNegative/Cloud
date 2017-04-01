@@ -11,13 +11,15 @@
 			$this->db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 		}
 
-		public function isOwner($id_user, $id_file)
+		public function isOwner($user, $file)
 		{
-			$query = $this->db->query("select * from Files;");
-			while($files = $query->fetch_assoc()) {
-				if (($files["id_file"] == $id_file) && ($files["id_user"] == $id_user)) {
-					return true;
-				}
+			$stmt = $this->db->prepare("select id_user from Files where id_file = ?;");
+			$stmt->bind_param('i', $file);
+			$stmt->execute();
+			$stmt->bind_result($id_user);
+			$stmt->fetch();
+			if ($id_user == $user) {
+				return true;
 			}
 			return false;
 		}
@@ -49,16 +51,14 @@
 			return $result;
 		}
 
-		public function getPath($id)
+		public function getPath($id_file)
 		{
-			settype($id, 'integer');
-			$query = $this->db->query("select * from Files;");
-			while($files = $query->fetch_assoc()) {
-				if ($files["id_file"] == $id) {
-					return $files["path"];
-				}
-			}
-			return false;
+			$stmt = $this->db->prepare("select path from Files where id_file = ?;");
+			$stmt->bind_param('i', $id_file);
+			$stmt->execute();
+			$stmt->bind_result($path);
+			$stmt->fetch();
+			return $path;
 		}
 
 		public function fileDownload($file)
