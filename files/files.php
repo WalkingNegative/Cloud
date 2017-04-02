@@ -23,19 +23,11 @@
 		<link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
 	</head>
 	<body>
-		<nav class="navbar navbar-light" style="background-color: #e3f2fd;">
-			<a href="<?= PAGE_MYFILES ?>" title="Мои файлы" class="navbar-brand">
-				Вы вошли, как
-				<?php
-					$user  = new User();
-					$info = $user->getInfo($_SESSION["id_user"]);
-					echo $info[0]." ".$info[1];
-				?>
-			</a>
-			<a href="<?= PAGE_LOGOUT ?>" class="navbar-brand" style="position: relative; float: right;">Выйти</a>
-			<a href="<?= PAGE_ALLFILES ?>" class="navbar-brand" style="position: relative; float: right;">Файлы</a>
-			<a href="<?= PAGE_USERS ?>" class="navbar-brand" style="position: relative; float: right;">Пользователи</a>
-		</nav>
+		<?php
+			require DIR_RESOURSES."navbar.php";
+			require DIR_RESOURSES."menu.php";
+		?>
+		<div style="width: 40%; margin: auto;">
 		<?php
 			$file = new File();
 			if ($file->countFiles(0) > 0): ?>
@@ -64,8 +56,9 @@
 			<?php endif; ?>
 		</table>
 		<form action="load.php" method="post" enctype="multipart/form-data" id="upload" style="position: relative; float: top; float: left; margin: auto; width: 20%">
-			<h3><span class="label label-primary"><label for="uploadbtn">Загрузить файл</label></span></h3>
+			<label for="uploadbtn" class="label label-primary" style="font-size: 16px;">Загрузить файл</label>
 			<input type="file" name="filename" id="uploadbtn" onchange="document.getElementById('upload').submit()" style="opacity: 0; z-index: -1;" for="load">
 		</form>
+		</div>
 	</body>
 </html>

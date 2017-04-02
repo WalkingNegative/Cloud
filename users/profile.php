@@ -20,7 +20,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Пользователи</title>
+	<title>Профиль</title>
 	<link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
 </head>
 <body>

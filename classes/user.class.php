@@ -45,7 +45,7 @@
 
 		public function isExistEmail($email)
 		{
-			$stmt = $this->db->prepare("Select * From Users = ?;");
+			$stmt = $this->db->prepare("Select * From Users Where email = ?;");
 			$stmt->bind_param('s', $email);
 			$stmt->execute();
 			$stmt->store_result();
