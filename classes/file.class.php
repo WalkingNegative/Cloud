@@ -11,6 +11,20 @@
 			$this->db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 		}
 
+		public function getInfo($id)
+		{
+			$stmt = $this->db->prepare("Select file_name, path, size, access From Files where id_file = ?;");
+			$stmt->bind_param('i', $id);
+			$stmt->execute();
+			$stmt->bind_result($file_name, $path, $size, $access);
+			$stmt->store_result();
+			$stmt->fetch();
+			if ($stmt->num_rows == 1) {
+				return [$file_name, $path, $size, $access];
+			}
+			return false;
+		}
+
 		public function isOwner($user, $file)
 		{
 			$stmt = $this->db->prepare("select id_user from Files where id_file = ?;");
@@ -24,7 +38,7 @@
 			return false;
 		}
 
-		public function countFiles($id)
+		public function countFiles($id = 0)
 		{
 			if ($id > 0) {
 				$stmt = $this->db->prepare("select id_file from Files where id_user = ? and access = 'private';");
@@ -38,7 +52,7 @@
 			return $result;
 		}
 
-		public function getFiles($id)
+		public function getFiles($id = 0)
 		{
 			if ($id > 0) {
 				$stmt = $this->db->prepare("select id_file, file_name, size from Files where id_user = ? and access = 'private' order by id_file DESC;");
@@ -47,8 +61,7 @@
 				$stmt = $this->db->prepare("select id_file, file_name, size from Files where access = 'public' order by id_file DESC;");
 			}
 			$stmt->execute();
-			$result = $stmt->get_result();
-			return $result;
+			return $stmt->get_result();
 		}
 
 		public function getPath($id_file)
@@ -93,7 +106,7 @@
 				$stmt->execute();
 			} 
 			else
-				$_SESSION["error"] = "Ошибка загузки файла";
+				return false;
 		}
 
 		public function deleteFile($path)

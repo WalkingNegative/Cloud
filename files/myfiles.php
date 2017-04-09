@@ -13,6 +13,10 @@
 	}
 
 	User::checkUsersOnline();
+	$user = new User();
+	$name = $user->getInfo($_SESSION["id_user"])[1];
+	$surname = $user->getInfo($_SESSION["id_user"])[2];
+	$photo = $user->getInfo($_SESSION["id_user"])[4];
 ?>
 <!DOCTYPE html>
 <html>
@@ -41,8 +45,8 @@
 						</tr>
 					</thead>
 				<?php
-					$stmt = $file->getFiles($_SESSION["id_user"]);
-					while ($row = $stmt->fetch_array(MYSQLI_NUM)): ?>
+					$files = $file->getFiles($_SESSION["id_user"]);
+					while ($row = $files->fetch_array(MYSQLI_NUM)): ?>
 						<tr>
 						<td><?= $row[1] ?></td>
 						<td><?= $row[2] ?></td>
@@ -59,18 +63,5 @@
 			<input type="file" name="filename" id="uploadbtn" onchange="document.getElementById('upload').submit()" style="opacity: 0; z-index: -1;" for="load">
 		</form>
 		</div>
-		<!--<div class="panel panel-primary" style="position: relative; float: right; width: 20%;">
-			<div class="panel-heading">
-				Пользователи онлайн
-			</div>
-  			<div class="panel-body">
-    			<?php
-					/*$users = $user->getUsersOnline();
-					while ($arr = $users->fetch_assoc()) {
-						echo $user->getInfo($arr["id_user"])[2]."<br>";
-					}*/
-				?>
-  			</div>
-		</div>-->
 	</body>
 </html>

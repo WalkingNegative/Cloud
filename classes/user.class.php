@@ -23,14 +23,14 @@
 
 		public function getInfo($id)
 		{
-			$stmt = $this->db->prepare("Select name, surname, email From Users where id_user = ?;");
+			$stmt = $this->db->prepare("Select id_user, name, surname, email, photo From Users where id_user = ?;");
 			$stmt->bind_param('i', $id);
 			$stmt->execute();
-			$stmt->bind_result($name, $surname, $email);
+			$stmt->bind_result($id_user, $name, $surname, $email, $photo);
 			$stmt->store_result();
 			$stmt->fetch();
 			if ($stmt->num_rows == 1) {
-				return [$name, $surname, $email];
+				return [$id_user, $name, $surname, $email, $photo];
 			}
 			return false;
 		}
@@ -81,7 +81,6 @@
 				return false;
 			}
 			$password = password_hash($password, PASSWORD_DEFAULT);
-			echo $email." ".$password." ".strlen($password);
 			$stmt = $this->db->prepare("Insert into Users (email, password, name, surname) values (?, ?, ?, ?);");
 			$stmt->bind_param("ssss", $email, $password, $name, $surname);
 			$stmt->execute();
@@ -112,13 +111,39 @@
 		}
 
 		public function getUsersOnline()
-		{ 
-			return $this->db->query("select * from Sessions order by id_user;");
+		{
+			$stmt = $this->db->prepare("select id_user from Sessions order by id_user;");
+			$stmt->execute();
+			return $stmt->get_result();
 		}
 
 		public function getAllUsers()
-		{ 
-			return $this->db->query("select * from Users order by id_user;");
+		{
+			$stmt = $this->db->prepare("select * from Users order by id_user;");
+			$stmt->execute();
+			return $stmt->get_result();
 		}
 
+		public function addPhoto($uploaddir, $id)
+		{
+			if(is_uploaded_file($_FILES["filename"]["tmp_name"])) {
+				$path = $uploaddir.$_FILES["filename"]["name"];
+				move_uploaded_file($_FILES["filename"]["tmp_name"], $uploaddir.$_FILES["filename"]["name"]);
+				$stmt = $this->db->prepare("update Users set photo = ? where id_user = ?;");
+				$stmt->bind_param("si", $path, $id);
+				$stmt->execute();
+			} 
+			else
+				return false;
+		}
+
+		public function deletePhoto($id)
+		{	
+			if (file_exists($this->getInfo($id)[4])) { 
+				unlink($this->getInfo($id)[4]);
+				$stmt = $this->db->prepare("update Users set photo = '' where id_user = ?;");
+				$stmt->bind_param("i", $id);
+				$stmt->execute();
+			}
+		}
 	}

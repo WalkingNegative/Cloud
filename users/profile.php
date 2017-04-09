@@ -28,10 +28,24 @@
 		require DIR_RESOURSES."navbar.php";
 		require DIR_RESOURSES."menu.php";
 	?>
-	<div style="margin: auto; margin-top: 15%; width: 506px; height: 230px;">
-		<a href="<?= PAGE_MYFILES ?>" title="Назад">
-			<img src="http://static.wixstatic.com/media/081748_97b54296416545adb790a93b648d3ccc~mv2.png_srz_506_230_85_22_0.50_1.20_0.00_png_srz">
-		</a>
+	<div style="margin: auto; margin-top: 1%; width: 40%">
+	<?php
+		$name = $user->getInfo($_GET["id"])[1];
+		$surname = $user->getInfo($_GET["id"])[2];
+		$photo = $user->getInfo($_GET["id"])[4];
+
+	?>
+	<h1><?= $name." ".$surname ?></h1>
+	<img src="<?= isset($photo) ? $photo : STANDART_PHOTO ?>">
+	<?php if ($_SESSION["id_user"] == $_GET["id"]) : ?>
+		<form action="uploadphoto.php" method="post" enctype="multipart/form-data" id="upload" style="margin-top: 20px;">
+			<label for="uploadbtn" class="label label-primary" style="font-size: 16px;">
+				Загрузить фото
+				<span class="glyphicon glyphicon-save"></span>
+			</label>
+				<input type="file" name="filename" id="uploadbtn" onchange="document.getElementById('upload').submit()" style="opacity: 0; z-index: -1;" for="uploadphoto">
+		<form>
+	<?php endif; ?>
 	</div>
 </body>
 </html>

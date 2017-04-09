@@ -30,8 +30,8 @@
 		<div style="width: 40%; margin: auto;">
 		<?php
 			$file = new File();
-			if ($file->countFiles(0) > 0): ?>
-				<table class="table table-hover table-bordered" style="width: 40%; margin: auto;">
+			if ($file->countFiles() > 0): ?>
+				<table class="table table-hover table-bordered">
 					<thead>
 						<tr class="alert alert-info">
 							<th>Имя файла</th>
@@ -41,7 +41,7 @@
 						</tr>
 					</thead>
 				<?php
-					$stmt = $file->getFiles(0);
+					$stmt = $file->getFiles();
 					while ($row = $stmt->fetch_array(MYSQLI_NUM)): 
 						$owner = $file->isOwner($_SESSION["id_user"], $row[0]) ?>
 						<tr>

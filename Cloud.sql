@@ -9,6 +9,7 @@ CREATE TABLE `Users` (
     `id_user` INT AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(20) NOT NULL,
     `surname` VARCHAR(20) NOT NULL,
+    `photo` VARCHAR(255),
     `email` VARCHAR(30) NOT NULL,
     `password` CHAR(255) NOT NULL
 );

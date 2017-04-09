@@ -12,7 +12,7 @@
 
 	$referer = getenv("HTTP_REFERER");
 
-	$uploaddir = DIR_DISC.$user->getInfo($_SESSION["id_user"])[2]."/";
+	$uploaddir = DIR_DISC.$user->getInfo($_SESSION["id_user"])[3]."/";
 	if($_FILES["filename"]["size"] > 85899345920) {
 		$_SESSION["error"] = ("Размер файла превышает 10 ГБ");
 		exit;

@@ -3,8 +3,6 @@
 	require "../classes/file.class.php";
 	require "../classes/user.class.php";
 
-	header("Content-Type: text/html; charset=utf-8");
-
 	session_start();
 
 	if (empty($_SESSION["id_user"])) {
@@ -14,7 +12,6 @@
 
 	User::checkUsersOnline();
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,10 +25,21 @@
 		require DIR_RESOURSES."navbar.php";
 		require DIR_RESOURSES."menu.php";
 	?>
-	<div style="margin: auto; margin-top: 15%; width: 506px; height: 230px;">
-		<a href="<?= PAGE_MYFILES ?>" title="Назад">
-			<img src="http://static.wixstatic.com/media/081748_97b54296416545adb790a93b648d3ccc~mv2.png_srz_506_230_85_22_0.50_1.20_0.00_png_srz">
-		</a>
+	<div style="margin: auto; width:40%;">
+		<form action="" method="get" accept-charset="utf-8">
+			<input type="text" name="search" placeholder="Начните вводить любое имя" class="form-control">
+		</form>
+		<br>
+		<?php
+			$user = new User();
+			$users = $user->getAllUsers();
+			while ($row = $users->fetch_array(MYSQLI_NUM)): ?>
+				<div style="font-size: 14px; font-weight: 700;">
+				<img src="<?= isset($user->getInfo($row[0])[4]) ? $user->getInfo($row[0])[4] : STANDART_PHOTO ?>" style="border-radius: 100%; box-shadow: 0 0 7px #666; width: 50px; height: 50px; margin: auto; margin-right: 10px">
+					<a href="<?= PAGE_PROFILE.$user->getInfo($row[0])[0] ?>"><?= $user->getInfo($row[0])[1]. " ".$user->getInfo($row[0])[2]; ?></a>
+				</div>
+				<hr>
+		<?php endwhile; ?>
 	</div>
 </body>
 </html>
