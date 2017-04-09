@@ -93,14 +93,24 @@
 			}
 		}
 
+		public function createUniqueName($file)
+		{
+			$regex = "/\.\w+$/";
+			preg_match($regex, $file, $match);
+			$pos = strripos($file, $match[0]);
+			$date = date("YmdHis");
+			$file = str_replace($match[0], $date, $file);
+			return $file .$match[0];
+		}
+
 		public function addFile($uploaddir, $id)
 		{
 			$referer = getenv("HTTP_REFERER");
 			$access = $referer == PAGE_MYFILES ? 'private' : 'public';
 			if(is_uploaded_file($_FILES["filename"]["tmp_name"])) {
 				$size = round($_FILES["filename"]["size"]/1048576, 2);
-				$path = $uploaddir.$_FILES["filename"]["name"];
-				move_uploaded_file($_FILES["filename"]["tmp_name"], $uploaddir.$_FILES["filename"]["name"]);
+				$path = $this->createUniqueName($uploaddir.$_FILES["filename"]["name"]);
+				move_uploaded_file($_FILES["filename"]["tmp_name"], $path);
 				$stmt = $this->db->prepare("insert into Files (file_name, path, id_user, size, access) values (?, ?, ? , ?, ?);");
 				$stmt->bind_param("ssids", $_FILES["filename"]["name"], $path, $id, $size, $access);
 				$stmt->execute();

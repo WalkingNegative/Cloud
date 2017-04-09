@@ -110,16 +110,13 @@
 			$db->query("delete from Sessions  where putdate < NOW() -  interval '15' minute"); 
 		}
 
-		public function getUsersOnline()
+		public function searchUser()
 		{
-			$stmt = $this->db->prepare("select id_user from Sessions order by id_user;");
-			$stmt->execute();
-			return $stmt->get_result();
-		}
-
-		public function getAllUsers()
-		{
-			$stmt = $this->db->prepare("select * from Users order by id_user;");
+			$sql = "select id_user from Users ";
+			if (isset($_GET["search"])) {
+				$sql .= "where name like '%".$_GET["search"]."%' or surname like '%".$_GET["search"]."%'";
+			}
+			$stmt = $this->db->prepare($sql);
 			$stmt->execute();
 			return $stmt->get_result();
 		}

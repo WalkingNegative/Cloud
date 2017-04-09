@@ -26,13 +26,13 @@
 		require DIR_RESOURSES."menu.php";
 	?>
 	<div style="margin: auto; width:40%;">
-		<form action="" method="get" accept-charset="utf-8">
-			<input type="text" name="search" placeholder="Начните вводить любое имя" class="form-control">
+		<form method="get" accept-charset="utf-8">
+			<input type="text" name="search" value="<?= isset($_GET["search"]) ? $_GET["search"] : "" ?>" placeholder="Начните вводить любое имя" class="form-control">
 		</form>
 		<br>
 		<?php
 			$user = new User();
-			$users = $user->getAllUsers();
+			$users = $user->searchUser();
 			while ($row = $users->fetch_array(MYSQLI_NUM)): ?>
 				<div style="font-size: 14px; font-weight: 700;">
 				<img src="<?= isset($user->getInfo($row[0])[4]) ? $user->getInfo($row[0])[4] : STANDART_PHOTO ?>" style="border-radius: 100%; box-shadow: 0 0 7px #666; width: 50px; height: 50px; margin: auto; margin-right: 10px">
