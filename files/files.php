@@ -41,7 +41,7 @@
 						</tr>
 					</thead>
 				<?php
-					$stmt = $file->getFiles();
+					$stmt = $file->getFiles(0, 'public');
 					while ($row = $stmt->fetch_array(MYSQLI_NUM)): 
 						$owner = $file->isOwner($_SESSION["id_user"], $row[0]) ?>
 						<tr>

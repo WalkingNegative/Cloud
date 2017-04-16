@@ -34,7 +34,7 @@
 		<div style="width: 40%; margin: auto;">
 		<?php
 			$file = new File();
-			if ($file->countFiles($_SESSION["id_user"]) > 0): ?>
+			if ($file->countFiles($_SESSION["id_user"]) > 0, 'private'): ?>
 				<table class="table table-hover table-bordered">
 					<thead>
 						<tr class="alert alert-info">

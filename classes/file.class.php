@@ -38,13 +38,14 @@
 			return false;
 		}
 
-		public function countFiles($id = 0)
+		public function countFiles($id = 0, $access = 'private')
 		{
 			if ($id > 0) {
-				$stmt = $this->db->prepare("select id_file from Files where id_user = ? and access = 'private';");
-				$stmt->bind_param("i", $id);
+				$stmt = $this->db->prepare("select id_file from Files where id_user = ? and access = ?;");
+				$stmt->bind_param("is", $id, $access);
 			} else {
-				$stmt = $this->db->prepare("select id_file from Files where access = 'public';");
+				$stmt = $this->db->prepare("select id_file from Files where access = ?;");
+				$stmt->bind_param("s", $access);
 			}
 			$stmt->execute();
 			$stmt->store_result();
@@ -52,13 +53,14 @@
 			return $result;
 		}
 
-		public function getFiles($id = 0)
+		public function getFiles($id = 0, $access = 'private')
 		{
 			if ($id > 0) {
-				$stmt = $this->db->prepare("select id_file, file_name, size from Files where id_user = ? and access = 'private' order by id_file DESC;");
-				$stmt->bind_param("i", $id);
+				$stmt = $this->db->prepare("select id_file, file_name, size from Files where id_user = ? and access = ? order by id_file DESC;");
+				$stmt->bind_param("is", $id, $access);
 			} else {
-				$stmt = $this->db->prepare("select id_file, file_name, size from Files where access = 'public' order by id_file DESC;");
+				$stmt = $this->db->prepare("select id_file, file_name, size from Files where access = ? order by id_file DESC;");
+				$stmt->bind_param("s", $access);
 			}
 			$stmt->execute();
 			return $stmt->get_result();

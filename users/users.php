@@ -35,7 +35,7 @@
 			$users = $user->searchUser();
 			while ($row = $users->fetch_array(MYSQLI_NUM)): ?>
 				<div style="font-size: 14px; font-weight: 700;">
-				<img src="<?= isset($user->getInfo($row[0])[4]) ? $user->getInfo($row[0])[4] : STANDART_PHOTO ?>" style="border-radius: 100%; box-shadow: 0 0 7px #666; width: 50px; height: 50px; margin: auto; margin-right: 10px">
+				<img src="<?= isset($user->getInfo($row[0])[4]) ? $user->getInfo($row[0])[4] : '../disc/defaultImage.jpg' ?>" style="border-radius: 100%; box-shadow: 0 0 7px #666; width: 50px; height: 50px; margin: auto; margin-right: 10px">
 					<a href="<?= PAGE_PROFILE.$user->getInfo($row[0])[0] ?>"><?= $user->getInfo($row[0])[1]. " ".$user->getInfo($row[0])[2]; ?></a>
 				</div>
 				<hr>
