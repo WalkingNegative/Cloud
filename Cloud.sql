@@ -32,6 +32,18 @@ CREATE TABLE `Sessions` (
   `id_user` tinytext NOT NULL 
 );
 
+CREATE TABLE `Subscriptions` (
+    `id_subscription` INT AUTO_INCREMENT PRIMARY KEY,
+    `user1` INT NOT NULL,
+    `user2` INT NOT NULL,
+    FOREIGN KEY (`user1`)
+        REFERENCES Users (id_user)
+        ON DELETE CASCADE,
+    FOREIGN KEY (`user2`)
+        REFERENCES Users (id_user)
+        ON DELETE CASCADE
+);
+
 select * from Users;
 
 select * from Files;

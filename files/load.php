@@ -1,25 +1,26 @@
 <?php
-	require "../config.php.ini";
-	require "../classes/file.class.php";
-	require "../classes/user.class.php";
 
-	header("Content-Type: text/html; charset=utf-8");
+require "../config.php.ini";
+require "../classes/file.class.php";
+require "../classes/user.class.php";
 
-	session_start();
+header("Content-Type: text/html; charset=utf-8");
 
-	$user  = new User();
-	$file = new File();
+session_start();
 
-	$referer = getenv("HTTP_REFERER");
+$user = new User();
+$file = new File();
 
-	$uploaddir = DIR_DISC.$user->getInfo($_SESSION["id_user"])[3]."/";
-	if($_FILES["filename"]["size"] > 85899345920) {
-		$_SESSION["error"] = ("Размер файла превышает 10 ГБ");
-		exit;
-	}
+$referer = getenv("HTTP_REFERER");
 
-	if (!$file->checkType($_FILES["filename"]["name"])) {
-		$file->addFile($uploaddir, $_SESSION["id_user"]);
-	} 
-	
-	header("location: ".$referer);
+$uploaddir = DIR_DISC . $user->getInfo($_SESSION["id_user"])[3] . "/";
+if ($_FILES["filename"]["size"] > 85899345920) {
+    $_SESSION["error"] = ("Размер файла превышает 10 ГБ");
+    exit;
+}
+
+if (!$file->checkType($_FILES["filename"]["name"])) {
+    $file->addFile($uploaddir, $_SESSION["id_user"]);
+}
+
+header("location: " . $referer);

@@ -1,28 +1,29 @@
 <?php
-	require "../config.php.ini";
-	require "../classes/file.class.php";
-	require "../classes/user.class.php";
-	require "../classes/AcImage.php";
 
-	session_start();
+require "../config.php.ini";
+require "../classes/file.class.php";
+require "../classes/user.class.php";
+require "../classes/AcImage.php";
 
-	$user  = new User();
-	$file = new File();
+session_start();
 
-	$referer = getenv("HTTP_REFERER");
+$user = new User();
+$file = new File();
 
-	$uploaddir = "../disc/".$user->getInfo($_SESSION["id_user"])[3]."/";
+$referer = getenv("HTTP_REFERER");
 
-	$user->deletePhoto($_SESSION["id_user"]);
-	$user->addPhoto($uploaddir, $_SESSION["id_user"]);
+$uploaddir = "../disc/" . $user->getInfo($_SESSION["id_user"])[3] . "/";
 
-	$path = $uploaddir.$_FILES["filename"]["name"];
-	$img = AcImage::createImage($path);
-	$img->resizeByHeight(300);
-	$img->cropCenter(200, 300);
-	
-	unlink($path);
-	$img->save($path);
-	
-	header("location: ".$referer);
+$user->deletePhoto($_SESSION["id_user"]);
+$user->addPhoto($uploaddir, $_SESSION["id_user"]);
+
+$path = $uploaddir . $_FILES["filename"]["name"];
+$img = AcImage::createImage($path);
+$img->resizeByHeight(300);
+$img->cropCenter(200, 300);
+
+unlink($path);
+$img->save($path);
+
+header("location: " . $referer);
 ?>
