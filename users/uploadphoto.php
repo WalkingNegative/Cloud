@@ -19,8 +19,8 @@ $user->addPhoto($uploaddir, $_SESSION["id_user"]);
 
 $path = $uploaddir . $_FILES["filename"]["name"];
 $img = AcImage::createImage($path);
-$img->resizeByHeight(300);
-$img->cropCenter(200, 300);
+$img->resizeByHeight(350);
+$img->cropCenter(225, 350);
 
 unlink($path);
 $img->save($path);

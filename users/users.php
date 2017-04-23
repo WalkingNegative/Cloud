@@ -32,7 +32,7 @@ User::checkUsersOnline();
             <br>
             <?php
             $user = new User();
-            $users = $user->searchUser($_SESSION["id_user"]);
+            $users = $user->searchUser($_SESSION["id_user"], isset($_GET["search"]) ? $_GET["search"] : null);
             while ($row = $users->fetch_array(MYSQLI_NUM)):
                 ?>
                 <div style="font-size: 14px; font-weight: 700;">
@@ -43,7 +43,10 @@ User::checkUsersOnline();
                     </a>
                     <form action="subscription.php" method="post" accept-charset="utf-8"  style="position: relative; float: right; margin-left: 10px;">
                         <input type="hidden" name="id" value="<?= $row[0] ?>">
-                        <input type="submit" class="btn btn-primary" value="Подписаться">
+                        <?php
+                            $subscriptionExist = User::isSubscriptionExists($_SESSION["id_user"], $row[0]);
+                        ?>
+                        <input type="submit" class="btn btn-<?= $subscriptionExist ? "default" : "primary" ?>" value="<?= $subscriptionExist ? "Отписаться" : "Подписаться" ?>" style="width: 150px">
                     </form>
                     <form action="mail.php" method="get" accept-charset="utf-8"  style="position: relative; float: right;">
                         <input type="hidden" name="id" value="<?= $row[0] ?>">

@@ -111,10 +111,10 @@ class User extends AbstractModel {
         return $stmt->num_rows == 1 ? true : false;
     }
 
-    public function searchUser($id) {
+    public function searchUser($id, $search = null) {
         $sql = "select id_user from Users where id_user != $id ";
-        if (isset($_GET["search"])) {
-            $sql .= "AND (name like '%" . $_GET["search"] . "%' or surname like '%" . $_GET["search"] . "%')";
+        if (isset($search)) {
+            $sql .= "AND (name like '%" . $search. "%' or surname like '%" . $search . "%')";
         }
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
@@ -155,9 +155,9 @@ class User extends AbstractModel {
         return $stmt->num_rows;
     }
 
-    public function getRandomSubscribers($user1, $limit = 6) {
-        $stmt = $this->db->prepare("select user2 from Subscriptions where user1 = ? order by rand() limit 6;");
-        $stmt->bind_param("s", $user1);
+    public function getRandomSubscribers($user1, $limit = 3) {
+        $stmt = $this->db->prepare("select user2 from Subscriptions where user1 = ? order by rand() limit ?;");
+        $stmt->bind_param("si", $user1, $limit);
         $stmt->execute();
         return $stmt->get_result();
     }

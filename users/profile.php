@@ -2,19 +2,14 @@
 require "../config.php.ini";
 require "../classes/file.class.php";
 require "../classes/user.class.php";
-
 header("Content-Type: text/html; charset=utf-8");
-
 session_start();
-
 if (empty($_SESSION["id_user"])) {
-    header("location: " . PAGE_START);
-    exit;
+header("location: " . PAGE_START);
+exit;
 }
-
 User::checkUsersOnline();
 ?>
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -34,74 +29,86 @@ User::checkUsersOnline();
             $surname = $user->getInfo($_GET["id"])[2];
             $photo = $user->getInfo($_GET["id"])[4];
             ?>
-            <div style="width: 30%; position: relative; float: left;">
+            <div style="width: 225px; position: relative; float: left; margin-right: 10px;">
                 <h3><?= $name . " " . $surname ?></h3>
-                <img src="<?= isset($photo) ? $photo : '../disc/defaultImage.jpg' ?>" >
+                <img src="<?= isset($photo) ? $photo : '../disc/defaultImage.jpg' ?>" style="width: 225px; margin: auto;">
                 <?php if ($_SESSION["id_user"] == $_GET["id"]) : ?>
-                    <form action="uploadphoto.php" method="post" enctype="multipart/form-data" id="upload" style="margin-top: 20px;">
-                        <label for="uploadbtn" class="label label-primary" style="font-size: 16px;">
+                <form action="uploadphoto.php" method="post" enctype="multipart/form-data" id="upload" style="margin-top: 10px;">
+                    <div style="font-size: 16px; text-align: center;">
+                        <label for="uploadbtn">
                             Загрузить фото
                             <span class="glyphicon glyphicon-save"></span>
                         </label>
-                        <input type="file" name="filename" id="uploadbtn" onchange="document.getElementById('upload').submit()" style="opacity: 0; z-index: -1;" for="uploadphoto">
-                        <form>
+                    </div>
+                    <input type="file" name="filename" id="uploadbtn" onchange="document.getElementById('upload').submit()" style="opacity: 0; z-index: -1;" for="uploadphoto">
+                    <form>
                         <?php endif; ?>
-                        <?php $CountSubscribers = $user->getCountSubscribers($_GET["id"]);
-                        if ($CountSubscribers > 0) :
-                            ?>
-                            <div class="panel panel-primary">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">
-                                        Подписки
-                                        <span style="position: relative; float: right;"><?= $CountSubscribers ?></span>   
-                                    </h3>
-                                </div>
-                                <div class="panel-body">
-                                    <?php
-                                    $subscribe = $user->getRandomSubscribers($_GET["id"]);
-                                    while ($row = $subscribe->fetch_array(MYSQLI_NUM)) :
-                                        ?>
-                                        <div style="margin: 15px 15px 15px 10px; position: relative; float: left;">
-                                            <a href="<?= PAGE_PROFILE . $row[0] ?>" title="<?= $user->getInfo($row[0])[1] . " " . $user->getInfo($row[0])[2] ?>" class="navbar-brand" style="padding: 0">
-                                                <img src="<?= isset($user->getInfo($row[0])[4]) ? $user->getInfo($row[0])[4] : "../disc/defaultImage.jpg" ?>" style="border-radius: 150%; width: 50px; height: 50px; margin: auto;">
-                                                <span style="font-size: 12px; font-weight: bold; margin: auto;">
-        <?= $user->getInfo($row[0])[1] ?>
-                                                </span>
-                                            </a>
-                                        </div>
-                            <?php endwhile; ?>
-                                </div>
-                            </div>
-                            <?php endif; ?>    
-                        </div>
-                        <div style="width: 60%; position: relative; float: left; margin-left: 10px; margin-top: 3%">
+                        <?php if ($_SESSION["id_user"] != $_GET["id"]) : ?>
+                        <form action="mail.php" method="get" accept-charset="utf-8" style="margin: 5px 0px 5px 0px">
+                            <input type="hidden" name="id" value="<?= $_GET["id"] ?>">
+                            <button type="submit" class="btn btn-primary" style="width: 225px">Отправить сообщение</button>
+                        </form>
+                        <form action="subscription.php" method="post" accept-charset="utf-8" style="margin: 5px 0px 5px 0px">
+                            <input type="hidden" name="id" value="<?= $_GET["id"] ?>">
                             <?php
-                            $file = new File();
-                            if ($file->countFiles($_GET["id"], 'public') > 0) :
+                            $subscriptionExist = User::isSubscriptionExists($_SESSION["id_user"], $_GET["id"]);
+                            ?>
+                            <input type="submit" class="btn btn-<?= $subscriptionExist ? "default" : "primary" ?>" value="<?= $subscriptionExist ? "Отписаться" : "Подписаться" ?>" style="width: 225px;">
+                        </form>
+                        <?php endif; ?>
+                        <?php if ($user->getCountSubscribers($_GET["id"]) > 0) : ?>
+                        <hr>
+                        <div class="panel panel-primary" style="margin-top: 20px;">
+                            <div class="panel-heading">
+                                <a href="<?= PAGE_FRIENDS."?id=".$_GET["id"] ?>" style="color: white;">
+                                Подписки
+                                <span style="position: relative; float: right;"><?= $user->getCountSubscribers($_GET["id"]) ?></span>
+                                </a>
+                            </div>
+                            <div class="panel-body">
+                                <?php $users = $user->getRandomSubscribers(isset($_GET["id"]) ? $_GET["id"] : $_SESSION["id_user"]);
+                                while ($row = $users->fetch_array(MYSQLI_NUM)):
                                 ?>
-                                <table class="table table-hover table-bordered">
-                                    <thead>
-                                        <tr class="alert alert-info">
-                                            <th>Имя файла</th>
-                                            <th>Размер</th>
-                                            <th><span class="glyphicon glyphicon-download-alt"></span></th>
-                                        </tr>
-                                    </thead>
-                                    <?php
-                                    $files = $file->getFiles($_GET["id"], 'public');
-                                    while ($row = $files->fetch_array(MYSQLI_NUM)):
-                                        ?>
-                                        <tr>
-                                            <td><?= $row[1] ?></td>
-                                            <td><?= $row[2] ?></td>
-                                            <td><a href="<?= PAGE_DOWNLOAD . $row[0] ?>">Скачать </a></td>
-                                        </tr>
-                                    <?php endwhile; ?>
-                                <?php else: ?>
-                                    <div class="alert alert-success">Нет файлов</div>
-<?php endif; ?>
-                            </table>
+                                <div style="font-size: 14px; font-weight: 700; margin-bottom: 10px;">
+                                    <a href="<?= PAGE_PROFILE . $row[0] ?>">
+                                        <img src="<?= isset($user->getInfo($row[0])[4]) ? $user->getInfo($row[0])[4] : '../disc/defaultImage.jpg' ?>" style="border-radius: 100%; box-shadow: 0 0 7px #666; width: 50px; height: 50px; margin: auto; margin-right: 10px">
+                                        <?= $user->getInfo($row[0])[1]; ?>
+                                        <sup style="color: #ADADAD"><?= User::isOnline($row[0]) ? "online" : "" ?></sup>
+                                    </a>
+                                </div>
+                                <?php endwhile ?>
+                            </div>
                         </div>
-                        </div>
-                        </body>
-                        </html>
+                        <?php endif ?>
+                    </div>
+                    <div style="width: 60%; position: relative; float: left; margin-left: 10px; margin-top: 3%">
+                        <?php
+                        $file = new File();
+                        if ($file->countFiles($_GET["id"], 'public') > 0) :
+                        ?>
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                                <tr class="alert alert-info">
+                                    <th>Имя файла</th>
+                                    <th>Размер</th>
+                                    <th><span class="glyphicon glyphicon-download-alt"></span></th>
+                                </tr>
+                            </thead>
+                            <?php
+                            $files = $file->getFiles($_GET["id"], 'public');
+                            while ($row = $files->fetch_array(MYSQLI_NUM)):
+                            ?>
+                            <tr>
+                                <td><?= $row[1] ?></td>
+                                <td><?= $row[2] ?></td>
+                                <td><a href="<?= PAGE_DOWNLOAD . $row[0] ?>">Скачать </a></td>
+                            </tr>
+                            <?php endwhile; ?>
+                            <?php else: ?>
+                            <div class="alert alert-success">Нет файлов</div>
+                            <?php endif; ?>
+                        </table>
+                    </div>
+                </div>
+            </body>
+        </html>
