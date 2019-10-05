@@ -59,9 +59,12 @@ class Client
             SELECT
                 email,
                 front_id,
+                registration_time,
                 first_name,
                 last_name,
-                birth
+                birth,
+                country,
+                city
             FROM
                 client
                 JOIN user USING (user_id)

@@ -116,12 +116,13 @@ class UserController extends Controller
         $user_id = UserToken::getUserIdByToken($_SESSION['user_token']);
         $user = Client::getClientInfo($user_id, false);
 
-        if (!empty($user)) {
+        if (empty($user)) {
             $this->render('user/profile.html.twig', ['error' => 'User not found!']);
             return;
         }
 
         $user = (array)$user;
+        $user['photo'] = "http://{$_SERVER['SERVER_NAME']}/userdata/default.jpg";
 
         $this->render('user/profile.html.twig', $user);
     }

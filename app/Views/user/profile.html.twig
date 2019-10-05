@@ -7,7 +7,31 @@
                 {{ error }}
             </div>
         {% else %}
+            <div>
+                <div class="row">
+                    <img src="{{ photo }}" style="width: 225px;" class="rounded d-block">
 
+                    <div class="ml-5">
+                        <h3>{% if (first_name and last_name) %}{{ first_name }} {{ last_name }}{% else %}{{ email }}{% endif %}</h3>
+                        {% if (first_name or last_name) %} <div><strong>Email:</strong> {{ email }}</div>{% endif %}
+                        {% if (birth) %} <div><strong>Birth:</strong> {{ birth }}</div>{% endif %}
+                        {% if (country) %} <div><strong>Country:</strong> {{ country }}</div>{% endif %}
+                        {% if (city) %} <div><strong>City:</strong> {{ city }}</div>{% endif %}
+                        {% if (registration_time) %} <div><strong>Registration time:</strong> {{ registration_time }}</div>{% endif %}
+                        <div>
+                            <button id="edit_info" class="btn btn-dark mt-5">
+                                Edit profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% endif %}
     </div>
+
+    <script>
+        document.getElementById('edit_info').onclick = e => {
+            window.location.href = '/profile/edit';
+        };
+    </script>
 {% endblock %}

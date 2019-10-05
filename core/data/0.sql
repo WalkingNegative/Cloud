@@ -19,6 +19,8 @@ CREATE TABLE client
     user_id    INT         NOT NULL,
     first_name VARCHAR(50) NULL DEFAULT NULL,
     last_name  VARCHAR(50) NULL DEFAULT NULL,
+    country    VARCHAR(50) NULL DEFAULT NULL,
+    city       VARCHAR(50) NULL DEFAULT NULL,
     birth      DATE        NULL DEFAULT NULL
 );
 

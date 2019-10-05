@@ -113,7 +113,7 @@ class UserToken
                  user_token
             WHERE
                 token = '{$token}'
-                AND valid_to <= '{$now}'
+                AND valid_to >= '{$now}'
             LIMIT 1
         ";
 
