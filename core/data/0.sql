@@ -44,8 +44,10 @@ CREATE TABLE user_photo
 CREATE TABLE file
 (
     file_id    INT AUTO_INCREMENT PRIMARY KEY,
+    front_id   VARCHAR(8)   NOT NULL,
     user_id    INT          NOT NULL,
     name       VARCHAR(256) NOT NULL,
+    size       VARCHAR(10)  NOT NULL,
     path       TEXT         NOT NULL,
     hash       VARCHAR(256) NOT NULL,
     is_private BOOL         NOT NULL DEFAULT FALSE,
