@@ -40,7 +40,8 @@ class Controller
     
     private function getConfig() {
         return [
-            'section' => $this->getSection()
+            'section' => $this->getSection(),
+            'is_logged' => !!$_SESSION['user_token']
         ];
     }
 }

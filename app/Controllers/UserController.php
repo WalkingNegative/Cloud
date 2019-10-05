@@ -60,6 +60,16 @@ class UserController extends Controller
     }
 
     /**
+     * @action logout
+     * @throws Exception
+     */
+    public function logoutAction(): void
+    {
+        UserToken::deleteSession($_SESSION['user_token']);
+        header('location: /profile');
+    }
+
+    /**
      * @action register
      * @throws Exception
      */
@@ -104,6 +114,7 @@ class UserController extends Controller
     }
 
     /**
+     * @action profile
      * @throws Exception
      */
     public function profileAction(): void

@@ -122,4 +122,23 @@ class UserToken
 
         return !empty($user_token) ? $user_token->user_id : null;
     }
+
+    /**
+     * @param string|null $token
+     */
+    public static function deleteSession(string $token = null): void
+    {
+        if (empty($token)) {
+            return;
+        }
+
+        $sql = "
+            DELETE FROM
+                 user_token
+            WHERE
+                token = '{$token}'
+        ";
+
+        DB::getPDO()->query($sql);
+    }
 }
