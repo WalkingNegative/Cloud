@@ -1,0 +1,7 @@
+.giti
+.idea
+cache
+vendor
+userdata
+
+composer.lock

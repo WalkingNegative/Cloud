@@ -1,0 +1,16 @@
+{
+  "name": "mvc",
+  "description": "MVC Skeleton",
+  "autoload": {
+    "psr-4": {
+      "app\\": "app/",
+      "core\\": "core/"
+    }
+  },
+  "require": {
+    "php": ">=7.1",
+    "twig/twig": ">2",
+    "symfony/yaml": "^3.4.15",
+    "ext-pdo": "*"
+  }
+}
