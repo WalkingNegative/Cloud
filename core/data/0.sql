@@ -61,12 +61,6 @@ CREATE TABLE file_user
     friend_id INT NOT NULL
 );
 
-CREATE TABLE black_list
-(
-    user_id    INT NOT NULL,
-    bad_guy_id INT NOT NULL
-);
-
 CREATE TABLE action
 (
     action_id   INT AUTO_INCREMENT PRIMARY KEY,
