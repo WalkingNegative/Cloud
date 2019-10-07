@@ -2,6 +2,8 @@
 
 namespace core;
 
+use app\Managers\UserToken;
+
 class Controller
 {
     public $view;
@@ -37,11 +39,15 @@ class Controller
     {
         $this->render('404.html.twig');
     }
-    
+
+    /**
+     * @return array
+     * @throws \Exception
+     */
     private function getConfig() {
         return [
             'section' => $this->getSection(),
-            'is_logged' => !!$_SESSION['user_token']
+            'is_logged' => UserToken::isUserTokenValid($_SESSION['user_token'])
         ];
     }
 }

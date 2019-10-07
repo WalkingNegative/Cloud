@@ -1,0 +1,87 @@
+{% extends 'templates/base.html.twig' %}
+
+{% block content %}
+    <div class="mt-5">
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% else %}
+    <div>
+        <div class="row">
+            <form method="post" action="/profile/edit">
+                <img src="{{ photo }}" width="225" class="rounded d-block">
+
+                <input type="hidden" value="is_load_photo">
+                <label class="btn btn-dark mt-3" style="width: 100%" for="upload_photo">
+                    <input type="file" id="upload_photo" name="upload_photo" hidden>
+                    Upload Photo
+                </label>
+
+                <button class="btn btn-dark" style="width: 100%" id="back">
+                    Back
+                </button>
+            </form>
+
+            <div class="card ml-2 col-sm">
+                <div class="card-body">
+                    {% if (message) %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                    <form action="/profile/edit" method="post">
+                        <div class="form-group row">
+                            <label for="first_name" class="col-sm-2 col-form-label">First name</label>
+                            <input type="text" class="form-control col-sm-10" name="first_name" id="first_name"
+                                   {% if (first_name) %}value="{{ first_name }}"{% endif %} autocomplete="off">
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="last_name" class="col-sm-2 col-form-label">Last name</label>
+                            <input type="text" class="form-control col-sm-10" name="last_name" id="last_name"
+                                   {% if (last_name) %}value="{{ last_name }}"{% endif %} autocomplete="off">
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="email" class="col-sm-2 col-form-label">Email</label>
+                            <input type="email" class="form-control col-sm-10" name="email" id="email" value="{{ email }}" disabled>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="country" class="col-sm-2 col-form-label">Country</label>
+                            <input type="text" class="form-control col-sm-10" name="country" id="country"
+                                   {% if (country) %}value="{{ country }}"{% endif %} autocomplete="off">
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="city" class="col-sm-2 col-form-label">City</label>
+                            <input type="text" class="form-control col-sm-10" name="city" id="city"
+                                   {% if (city) %}value="{{ city }}"{% endif %} autocomplete="off">
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="birth" class="col-sm-2 col-form-label">Birth</label>
+                            <input type="date" class="form-control col-sm-10" name="birth" id="birth"
+                                   {% if (birth) %}value="{{ birth }}"{% endif %} autocomplete="off">
+                        </div>
+
+                        <div class="form-group">
+                            <input type="hidden" name="is_edit" value="1">
+
+                            <input type="submit" class="btn btn-dark col-sm-2" id="submit" value="Save">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        document.getElementById('back').onclick = (e) => {
+            e.preventDefault();
+            window.location.href = '/profile';
+        };
+    </script>
+{% endblock %}

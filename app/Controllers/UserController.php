@@ -137,4 +137,34 @@ class UserController extends Controller
 
         $this->render('user/profile.html.twig', $user);
     }
+
+    /**
+     * @action profileEdit
+     * @throws Exception
+     */
+    public function profileEditAction(): void
+    {
+        if (!UserToken::isUserTokenValid($_SESSION['user_token'])) {
+            header('location: /login');
+            return;
+        }
+
+        $_REQUEST['user_id'] = $user_id = UserToken::getUserIdByToken($_SESSION['user_token']);
+        $user = Client::getClientInfo($user_id, false);
+
+        if (empty($user)) {
+            $this->render('user/profile.html.twig', ['error' => 'User not found!']);
+            return;
+        }
+
+        $user = (array)$user;
+        $user['photo'] = "http://{$_SERVER['SERVER_NAME']}/userdata/default.jpg";
+
+        if ($_REQUEST['is_edit']) {
+            Client::editClient((object) $_REQUEST);
+            $user['message'] = 'User was updated successful!';
+        }
+
+        $this->render('user/profile_edit.html.twig', $user);
+    }
 }

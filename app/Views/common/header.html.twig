@@ -7,6 +7,14 @@
                         <a class="nav-link {% if config.section == 'profile' %}active{% endif %}" href="/">Home</a>
                     </li>
 
+                    <li class="nav-item pull-right">
+                        <a class="nav-link {% if config.section == 'myfiles' %}active{% endif %}" href="/myfiles">My Files</a>
+                    </li>
+
+                    <li class="nav-item pull-right">
+                        <a class="nav-link {% if config.section == 'files' %}active{% endif %}" href="/files">Search</a>
+                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link {% if config.section == 'logout' %}active{% endif %}" href="/logout">Logout</a>
                     </li>

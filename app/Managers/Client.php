@@ -8,7 +8,7 @@ use core\db\DB;
 
 class Client
 {
-    const FIELD_LIST = ['user_id', 'first_name', 'last_name', 'birth'];
+    const FIELD_LIST = ['user_id', 'first_name', 'last_name', 'birth', 'country', 'city'];
 
     public static function isValueExist(string $field, $value): bool
     {
@@ -46,6 +46,33 @@ class Client
         }
 
         $sql .= implode(', ', $fields);
+        DB::getPDO()->query($sql);
+
+        return DB::getPdo()->lastInsertId();
+    }
+
+    public static function editClient(\stdClass $params): ?int
+    {
+        if (empty($params->user_id)) {
+            return null;
+        }
+
+        $params = (array)$params;
+        $sql = "
+            UPDATE client
+            SET 
+        ";
+
+        $fields = [];
+        foreach ($params as $field => $value) {
+            array_search($field, self::FIELD_LIST) !== false
+            and $fields[] = "{$field} = '{$value}'";
+        }
+
+        $sql .= implode(', ', $fields) . "
+            WHERE user_id = '{$params['user_id']}'
+        ";
+
         DB::getPDO()->query($sql);
 
         return DB::getPdo()->lastInsertId();
