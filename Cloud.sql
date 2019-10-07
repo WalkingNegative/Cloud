@@ -1,10 +1,3 @@
-drop database Cloud;
-create database Cloud;
-
-use Cloud;
-
-SET SQL_SAFE_UPDATES = 0;
- 
 CREATE TABLE `Users` (
     `id_user` INT AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(20) NOT NULL,
@@ -43,9 +36,3 @@ CREATE TABLE `Subscriptions` (
         REFERENCES Users (id_user)
         ON DELETE CASCADE
 );
-
-select * from Users;
-
-select * from Files;
-
-select * from Sessions;

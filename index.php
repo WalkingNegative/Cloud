@@ -1,18 +1,16 @@
 <?php
-require "/config.php.ini";
-
 header("Content-Type: text/html; charset=utf-8");
 
 session_start();
 
 $referer = getenv("HTTP_REFERER");
 
-if ($referer == PAGE_REGISTRATION) {
+if ($referer === 'users/registration.php') {
     unset($_SESSION["error"]);
 }
 
 if (!empty($_SESSION["id_user"])) {
-    header("location: " . PAGE_MYFILES);
+    header('location: /files/myfiles.php');
 }
 
 if (!file_exists("disc")) {
@@ -31,7 +29,7 @@ if (!file_exists("disc")) {
         <script type="text/javascript" src="js/handler.js"></script>
     </head>
     <body>
-        <form action="users/auth.php"  method="post" enctype="multipart/form-data" name="login_form" id="form" role="form" style="width: 20%; margin: auto; margin-top: 15%;" onsubmit="onSubmit()">
+        <form action="actions/user/auth.php" method="post" enctype="multipart/form-data" name="login_form" id="form" role="form" style="width: 20%; margin: auto; margin-top: 15%;" onsubmit="onSubmit()">
             <div class="form-group">
                 <label for="email">Эл. почта</label>
                 <input type="text" name="email"  placeholder="Введите эл. почту" id="email" class="form-control" maxlength="30">
