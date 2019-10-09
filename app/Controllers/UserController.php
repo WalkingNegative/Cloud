@@ -5,6 +5,7 @@ namespace app\Controllers;
 use app\Managers\Action;
 use app\Managers\Client;
 use app\Managers\User;
+use app\Managers\UserPhoto;
 use app\Managers\UserToken;
 use app\Tools\RandomStringGenerator;
 use core\Controller;
@@ -133,7 +134,7 @@ class UserController extends Controller
         }
 
         $user = (array)$user;
-        $user['photo'] = "http://{$_SERVER['SERVER_NAME']}/userdata/default.jpg";
+        $user['photo'] = UserPhoto::getFullPhotoUrl($user_id);
 
         $this->render('user/profile.html.twig', $user);
     }
@@ -158,11 +159,15 @@ class UserController extends Controller
         }
 
         $user = (array)$user;
-        $user['photo'] = "http://{$_SERVER['SERVER_NAME']}/userdata/default.jpg";
+        $user['photo'] = UserPhoto::getFullPhotoUrl($user_id);
 
         if ($_REQUEST['is_edit']) {
             Client::editClient((object) $_REQUEST);
             $user['message'] = 'User was updated successful!';
+        }
+
+        if ($_REQUEST['is_load_photo']) {
+            $user['photo'] = UserPhoto::uploadPhoto((object) array_merge($_REQUEST, $user));
         }
 
         $this->render('user/profile_edit.html.twig', $user);

@@ -9,10 +9,10 @@
     {% else %}
     <div>
         <div class="row">
-            <form method="post" action="/profile/edit">
+            <form method="post" action="/profile/edit" id="upload_photo_form" enctype="multipart/form-data">
                 <img src="{{ photo }}" width="225" class="rounded d-block">
 
-                <input type="hidden" value="is_load_photo">
+                <input type="hidden" name="is_load_photo" value="1">
                 <label class="btn btn-dark mt-3" style="width: 100%" for="upload_photo">
                     <input type="file" id="upload_photo" name="upload_photo" hidden>
                     Upload Photo
@@ -82,6 +82,11 @@
         document.getElementById('back').onclick = (e) => {
             e.preventDefault();
             window.location.href = '/profile';
+        };
+
+        document.getElementById('upload_photo').onchange = (e) => {
+            e.preventDefault();
+            document.forms.item(0).submit();
         };
     </script>
 {% endblock %}

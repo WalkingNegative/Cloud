@@ -85,6 +85,7 @@ class Client
         $sql = "
             SELECT
                 email,
+                client.user_id,
                 front_id,
                 registration_time,
                 first_name,
