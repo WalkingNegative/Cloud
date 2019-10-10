@@ -3,132 +3,116 @@
 namespace app\lib\img\geometry;
 
 
-/**
- * Класс, описываюший точку на плоскости.
- */
-class Point {
+class Point
+{
+    private $x;
+    private $y;
 
-	/**
-	 * Координата x точки
-	 *
-	 * @var int
-	 */
-	private $x;
+    /**
+     * Point constructor.
+     * @param $x
+     * @param $y
+     * @throws IllegalArgumentException
+     */
+    public function __construct($x, $y)
+    {
+        $this->setX($x);
+        $this->setY($y);
+    }
 
-	/**
-	 * Координата y точки
-	 *
-	 * @var int
-	 */
-	private $y;
+    /**
+     * @param Point $p
+     * @return $this
+     * @throws IllegalArgumentException
+     */
+    public function offset(Point $p)
+    {
+        $this->setX($this->getX() + $p->getX());
+        $this->setY($this->getY() + $p->getY());
+        return $this;
+    }
 
-	/**
-	 * @param int
-	 * @param int
-	 * @throws IllegalArgumentException
-	 */
-	public function __construct($x, $y) {
-		$this->setX($x);
-		$this->setY($y);
-	}
+    /**
+     * @param Point $p
+     * @param $obj
+     * @return Point
+     * @throws IllegalArgumentException
+     */
+    public static function add(Point $p, $obj)
+    {
+        if ($obj instanceof Point) {
+            return new Point($p->getX() + $obj->getX(), $p->getY() + $obj->getY());
+        } else if ($obj instanceof Size) {
+            return new Point($p->getX() + $obj->getWidth(), $p->getY() + $obj->getHeight());
+        }
+        throw new IllegalArgumentException();
+    }
 
-	/**
-	 * Смещает точку на указанную точку, складывая их координаты.
-	 * Метод возвращает смещённую точку.
-	 *
-	 * @param Point
-	 * @return Point
-	 */
-	public function offset(Point $p) {
-		$this->setX($this->getX() + $p->getX());
-		$this->setY($this->getY() + $p->getY());
-		return $this;
-	}
+    /**
+     * @param Point $p
+     * @param $obj
+     * @return Point
+     * @throws IllegalArgumentException
+     */
+    public static function subtract(Point $p, $obj)
+    {
+        if ($obj instanceof Point) {
+            return self::add($p, new Point(-$obj->getX(), -$obj->getY()));
+        } else if ($obj instanceof Size) {
+            return self::add($p, new Point(-$obj->getWidth(), -$obj->getHeight()));
+        }
+        throw new IllegalArgumentException();
+    }
 
-	/**
-	 * Складывает координаты точки с координатами точки или высотой и шириной
-	 * размера и возвращяет новую точку.
-	 *
-	 * @param Point
-	 * @param Point|Size
-	 * @return Point
-	 * @throws IllegalArgumentException
-	 */
-	public static function add(Point $p, $obj) {
-		if ($obj instanceof Point) {
-			return new Point($p->getX() + $obj->getX(), $p->getY() + $obj->getY());
-		} else if ($obj instanceof Size) {
-			return new Point($p->getX() + $obj->getWidth(), $p->getY() + $obj->getHeight());
-		}
-		throw new IllegalArgumentException();
-	}
+    /**
+     * @param Point $p
+     * @return bool
+     */
+    public function equals(Point $p)
+    {
+        return $this->getX() == $p->getX() && $this->getY() == $p->getY();
+    }
 
-	/**
-	 * Вычитает из координат точки координаты другой точки или
-	 * высоту и ширину размера.
-	 *
-	 * @param Point
-	 * @param Point|Size
-	 * @return Point
-	 * @throws IllegalArgumentException
-	 */
-	public static function subtract(Point $p, $obj) {
-		if ($obj instanceof Point) {
-			return self::add($p, new Point(-$obj->getX(), -$obj->getY()));
-		} else if ($obj instanceof Size) {
-			return self::add($p, new Point(-$obj->getWidth(), -$obj->getHeight()));
-		}
-		throw new IllegalArgumentException();
-	}
+    public function getX()
+    {
+        return $this->x;
+    }
 
-	/**
-	 * Сравнивает две точки
-	 *
-	 * @param Point
-	 * @return boolean
-	 */
-	public function equals(Point $p) {
-		return $this->getX() == $p->getX() && $this->getY() == $p->getY();
-	}
+    public function getY()
+    {
+        return $this->y;
+    }
 
-	public function getX() {
-		return $this->x;
-	}
+    /**
+     * @param $x
+     * @throws IllegalArgumentException
+     */
+    public function setX($x)
+    {
+        if (is_integer($x)) {
+            $this->x = $x;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
 
-	public function getY() {
-		return $this->y;
-	}
+    /**
+     * @param int
+     * @throws IllegalArgumentException
+     */
 
-	/**
-	 * @param int
-	 * @throws IllegalArgumentException
-	 */
+    public function setY($y)
+    {
+        if (is_integer($y)) {
+            $this->y = $y;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
 
-	public function setX($x) {
-		if (is_integer($x)) {
-			$this->x = $x;
-		} else {
-			throw new IllegalArgumentException();
-		}
-	}
-
-	/**
-	 * @param int
-	 * @throws IllegalArgumentException
-	 */
-
-	public function setY($y) {
-		if (is_integer($y)) {
-			$this->y = $y;
-		} else {
-			throw new IllegalArgumentException();
-		}
-	}
-
-	public function __toString() {
-		return "{x: {$this->x}, y: {$this->y}}";
-	}
+    public function __toString()
+    {
+        return "{x: {$this->x}, y: {$this->y}}";
+    }
 
 }
-
-?>

@@ -3,248 +3,193 @@
 namespace app\lib\img\geometry;
 
 
-/**
- * Класс, описывающий размер как пару высота-ширина.
- */
+class Size
+{
+    private $width;
+    private $height;
 
-class Size {
+    /**
+     * Size constructor.
+     * @param $width
+     * @param $height
+     * @throws IllegalArgumentException
+     */
+    public function __construct($width, $height)
+    {
+        $this->setWidth($width);
+        $this->setHeight($height);
+    }
 
-	/**
-	 * ширина
-	 *
-	 * @var int
-	 */
-	private $width;
+    public function greatThen(Size $s)
+    {
+        return $this->getWidth() > $s->getWidth() || $this->getHeight() > $s->getHeight();
+    }
 
-	/**
-	 * высота
-	 *
-	 * @var int
-	 */
+    public function lessThen(Size $s)
+    {
+        return !$this->greatThen($s) && !$this->equals($s);
+    }
 
-	private $height;
+    public function isInner(Size $s)
+    {
+        return $this->getWidth() <= $s->getWidth() && $this->getHeight() <= $s->getHeight();
+    }
 
-	/**
-	 * @param int $width
-	 * @param int $height
-	 * @throws IllegalArgumentException
-	 */
+    public function equals(Size $s)
+    {
+        return $this->getWidth() == $s->getWidth() && $this->getHeight() == $s->getHeight();
+    }
 
-	public function __construct($width, $height) {
-		$this->setWidth($width);
-		$this->setHeight($height);
-	}
+    /**
+     * @return $this
+     * @throws IllegalArgumentException
+     */
+    public function flip()
+    {
+        $t = $this->getWidth();
+        $this->setWidth($this->getHeight());
+        $this->setHeight($t);
+        return $this;
+    }
 
-	/**
-	 * Устанавливает больше ли, (по высоте <b>или</b> по ширине)
-	 * размер заданного размера.
-	 *
-	 * @param Size $s
-	 * @return boolean
-	 */
+    /**
+     * @param $width
+     * @return $this|Size
+     * @throws IllegalArgumentException
+     */
+    public function getByWidth($width)
+    {
+        if (!is_integer($width)) {
+            throw new IllegalArgumentException();
+        }
 
-	public function greatThen(Size $s) {
-		return $this->getWidth() > $s->getWidth() || $this->getHeight() > $s->getHeight();
-	}
+        if ($width >= $this->getWidth()) {
+            return $this;
+        }
 
-	/**
-	 * Устанавливает меньше ли, (по высоте <b>и</b> по ширине)
-	 * размер заданного размера.
-	 *
-	 * @param Size $s
-	 * @return bool
-	 */
+        $height = (int)round($this->getHeight() * $width / $this->getWidth());
+        return new Size($width, $height);
+    }
 
-	public function lessThen(Size $s) {
-		return !$this->greatThen($s) && !$this->equals($s);
-	}
+    /**
+     * @param $height
+     * @return $this|Size
+     * @throws IllegalArgumentException
+     */
+    public function getByHeight($height)
+    {
+        if (!is_integer($height)) {
+            throw new IllegalArgumentException();
+        }
 
-	/**
-	 * Устанавливает, меньше или равен ли размер (по высоте <b>и</b> по ширине)
-	 * заданного размера.
-	 *
-	 * @param Size
-	 * @return bool
-	 */
+        if ($height >= $this->getHeight()) {
+            return $this;
+        }
 
-	public function isInner(Size $s) {
-		return $this->getWidth() <= $s->getWidth() && $this->getHeight() <= $s->getHeight();
-	}
+        $width = (int)round($this->getWidth() * $height / $this->getHeight());
+        return new Size($width, $height);
+    }
 
-	/**
-	 * Устанавливает равен ли заданный размер текущему.
-	 *
-	 * @param Size
-	 * @return bool
-	 */
+    /**
+     * @return $this|Size
+     * @throws IllegalArgumentException
+     */
+    public function getByFrame()
+    {
+        $args = func_get_args();
+        if (count($args) == 2) {
+            $this->getByFrame(new Size($args[0], $args[1]));
+        } else if (count($args) == 1 && $args[0] instanceof Size) {
+            $frame = $args[0];
+        } else {
+            throw new IllegalArgumentException();
+        }
 
-	public function equals(Size $s) {
-		return $this->getWidth() == $s->getWidth() && $this->getHeight() == $s->getHeight();
-	}
+        if ($frame->getWidth() <= 0 || $frame->getHeight() <= 0)
+            throw new IllegalArgumentException();
 
-	/**
-	 * Менеят местами высоту и ширину размера, "переварачивая" его.
-	 * @return Size
-	 */
+        if ($this->isInner($frame))
+            return $this;
 
-	public function flip() {
-		$t = $this->getWidth();
-		$this->setWidth($this->getHeight());
-		$this->setHeight($t);
-		return $this;
-	}
+        $height = $frame->getHeight();
+        $width = $frame->getWidth();
 
-	/**
-	 * Пропорционально уменьшает размер по заданной ширине.
-	 * Возвращает новый размер, не изменяя старый.
-	 *
-	 * @param int $width
-	 * @return Size
-	 * @throws IllegalArgumentExceptions
-	 */
+        if ($this->getWidth() / $width > $this->getHeight() / $height)
+            return $this->getByWidth($width);
 
-	public function getByWidth($width) {
-		if (!is_integer($width)) {
-			throw new IllegalArgumentException();
-		}
+        return $this->getByHeight($height);
+    }
 
-		if ($width >= $this->getWidth()) {
-			return $this;
-		}
+    /**
+     * @param Size $s
+     * @param $obj
+     * @return Size
+     * @throws IllegalArgumentException
+     */
+    public static function add(Size $s, $obj)
+    {
+        if ($obj instanceof Size) {
+            return new Size($s->getWidth() + $obj->getWidth(), $s->getHeight() + $obj->getHeight());
+        } else if ($obj instanceof Point) {
+            return new Size($s->getWidth() + $obj->getX(), $s->getHeigth() + $obj->getY());
+        }
+        throw new IllegalArgumentException();
+    }
 
-		$height = (int) round($this->getHeight() * $width / $this->getWidth());
-		return new Size($width, $height);
-	}
+    /**
+     * @param Size $s
+     * @param $obj
+     * @return Size
+     * @throws IllegalArgumentException
+     */
+    public static function subtract(Size $s, $obj)
+    {
+        if ($obj instanceof Size) {
+            return new Size($s->getWidth() - $obj->getWidth(), $s->getHeight() - $obj->getHeight());
+        } else if ($obj instanceof Point) {
+            return new Size($s->getWidth() - $obj->getX(), $s->getHeigth() - $obj->getY());
+        }
+        throw new IllegalArgumentException();
+    }
 
-	/**
-	 * Пропорционально уменьшает размер по заданной высоте.
-	 * Возвращает новый размер, не изменяя старый.
-	 *
-	 * @param int $height
-	 * @return Size
-	 * @throws IllegalArgumentException */
+    public function getWidth()
+    {
+        return $this->width;
+    }
 
-	public function getByHeight($height) {
-		if (!is_integer($height)) {
-			throw new IllegalArgumentException();
-		}
+    public function getHeight()
+    {
+        return $this->height;
+    }
 
-		if ($height >= $this->getHeight()) {
-			return $this;
-		}
+    /**
+     * @param $width
+     * @throws IllegalArgumentException
+     */
+    public function setWidth($width)
+    {
+        if (is_integer($width)) {
+            $this->width = $width;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
 
-		$width = (int) round($this->getWidth() * $height / $this->getHeight());
-		return new Size($width, $height);
-	}
+    /**
+     * @param $height
+     * @throws IllegalArgumentException
+     */
+    public function setHeight($height)
+    {
+        if (is_integer($height)) {
+            $this->height = $height;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
 
-	/**
-	 * Вписывает размер в рамки, пропорционально уменьшая его.
-	 * Возвращает новый размер, не изменяя старый.
-	 *
-	 * @return Size
-	 * @throws IllegalArgumentException
-	 */
-
-	public function getByFrame() { // Size $frame || $width, $height
-		$args = func_get_args();
-		if (count($args) == 2) {
-			$this->getByFrame(new Size($args[0], $args[1]));
-		} else if (count($args) == 1 && $args[0] instanceof Size) {
-			$frame = $args[0];
-		} else {
-			throw new IllegalArgumentException();
-		}
-
-		if ($frame->getWidth() <= 0 || $frame->getHeight() <= 0)
-			throw new IllegalArgumentException();
-
-		if ($this->isInner($frame))
-			return $this;
-
-		$height = $frame->getHeight();
-		$width = $frame->getWidth();
-
-		if ($this->getWidth() / $width > $this->getHeight() / $height)
-			return $this->getByWidth($width);
-
-		return $this->getByHeight($height);
-	}
-
-	/**
-	 * Складывает высоту и ширину размера с координатами точки или
-	 * высотой и шириной другого размера и возвращает получившийся размер.
-	 *
-	 * @param Size $s
-	 * @param Size|Point $obj
-	 * @return Size
-	 * @throws IllegalArgumentException
-	 */
-
-	public static function add(Size $s, $obj) {
-		if($obj instanceof Size) {
-			return new Size($s->getWidth() + $obj->getWidth(), $s->getHeight() + $obj->getHeight());
-		} else if ($obj instanceof Point) {
-			return new Size($s->getWidth() + $obj->getX(),	$s->getHeigth() + $obj->getY());
-		}
-		throw new IllegalArgumentException();
-	}
-
-	/**
-	 *
-	 * Вычитает из высоты и ширины размера координаты точки или
-	 * высоту и ширину другого размера и возвращает получившийся размер.
-	 *
-	 * @param Size $s
-	 * @param Size|Point $obj
-	 * @return Size
-	 * @throws IllegalArgumentException
-	 */
-
-	public static function subtract(Size $s, $obj) {
-		if($obj instanceof Size) {
-			return new Size($s->getWidth() - $obj->getWidth(), $s->getHeight() - $obj->getHeight());
-		} else if ($obj instanceof Point) {
-			return new Size($s->getWidth() - $obj->getX(),	$s->getHeigth() - $obj->getY());
-		}
-		throw new IllegalArgumentException();
-	}
-
-	public function getWidth() {
-		return $this->width;
-	}
-
-	public function getHeight() {
-		return $this->height;
-	}
-
-	/**
-	 * @param int
-	 * @throws IllegalArgumentException
-	 */
-
-	public function setWidth($width) {
-		if (is_integer($width)) {
-			$this->width = $width;
-		} else {
-			throw new IllegalArgumentException();
-		}
-	}
-
-	/**
-	 * @param int
-	 * @throws IllegalArgumentException
-	 */
-
-	public function setHeight($height) {
-		if (is_integer($height)) {
-			$this->height = $height;
-		} else {
-			throw new IllegalArgumentException();
-		}
-	}
-
-	public function __toString() {
-		return "{width: {$this->width}, height: {$this->height}}";
-	}
+    public function __toString()
+    {
+        return "{width: {$this->width}, height: {$this->height}}";
+    }
 }
-?>

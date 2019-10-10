@@ -99,7 +99,7 @@ class UserController extends Controller
 
             do {
                 $front_id = RandomStringGenerator::generate(User::FRONT_ID_LENGTH);
-            } while(User::isValueExist('user_id', $front_id));
+            } while (User::isValueExist('user_id', $front_id));
 
             $user_id = User::addNewUser($user_data, $front_id);
             Client::addNewClient((object)['user_id' => $user_id]);
@@ -134,7 +134,7 @@ class UserController extends Controller
         }
 
         $user = (array)$user;
-        $user['photo'] = UserPhoto::getFullPhotoUrl($user_id);
+        $user['photo'] = UserPhoto::getPhotoUrl($user_id);
 
         $this->render('user/profile.html.twig', $user);
     }
@@ -159,15 +159,15 @@ class UserController extends Controller
         }
 
         $user = (array)$user;
-        $user['photo'] = UserPhoto::getFullPhotoUrl($user_id);
+        $user['photo'] = UserPhoto::getPhotoUrl($user_id);
 
         if ($_REQUEST['is_edit']) {
-            Client::editClient((object) $_REQUEST);
+            Client::editClient((object)$_REQUEST);
             $user['message'] = 'User was updated successful!';
         }
 
         if ($_REQUEST['is_load_photo']) {
-            $user['photo'] = UserPhoto::uploadPhoto((object) array_merge($_REQUEST, $user));
+            $user['photo'] = UserPhoto::uploadPhoto((object)array_merge($_REQUEST, $user));
         }
 
         $this->render('user/profile_edit.html.twig', $user);
