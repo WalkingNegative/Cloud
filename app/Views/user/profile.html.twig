@@ -40,37 +40,23 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td><a href="/">1OHJ56ZF</a></td>
-                            <td>porno_hd.avi</td>
-                            <td>1.2 GB</td>
-                            <td class="text-danger">no</td>
-                            <td>
-                                <a href="/"><span class="text-primary fa fa-save"></span></a>
-                                /
-                                <a href="/"><span class="text-danger fa fa-trash-alt"></span></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/">P3UJ89PZ</a></td>
-                            <td>kirkorov-cvet_nastroenia.mp3</td>
-                            <td>4 MB</td>
-                            <td class="text-success">yes</td>
-                            <td>
-                                <a href="/"><span class="text-primary fa fa-save"></span></a>
-                                /
-                                <a href="/"><span class="text-danger fa fa-trash-alt"></span></a>
-                            </td>                        </tr>
-                        <tr>
-                            <td><a href="/">AYL34U9Q</a></td>
-                            <td>boobs.png</td>
-                            <td>2.8 MB</td>
-                            <td class="text-danger">no</td>
-                            <td>
-                                <a href="/"><span class="text-primary fa fa-save"></span></a>
-                                /
-                                <a href="/"><span class="text-danger fa fa-trash-alt"></span></a>
-                            </td>                        </tr>
+                            {% for file in files %}
+                                <tr>
+                                    <td><a href="/">{{ file.front_id }}</a></td>
+                                    <td>{{ file.name }}</td>
+                                    <td>{{ file.size }}</td>
+                                    {% if (file.is_private) %}
+                                        <td class="text-danger">no</td>
+                                    {% else %}
+                                        <td class="text-success">yes</td>
+                                    {% endif %}
+                                    <td>
+                                        <a href="/"><span class="text-primary fa fa-save"></span></a>
+                                        /
+                                        <a href="/"><span class="text-danger fa fa-trash-alt"></span></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>

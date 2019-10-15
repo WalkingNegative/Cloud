@@ -4,6 +4,7 @@ namespace app\Controllers;
 
 use app\Managers\Action;
 use app\Managers\Client;
+use app\Managers\File;
 use app\Managers\User;
 use app\Managers\UserPhoto;
 use app\Managers\UserToken;
@@ -135,6 +136,7 @@ class UserController extends Controller
 
         $user = (array)$user;
         $user['photo'] = UserPhoto::getPhotoUrl($user_id);
+        $user['files'] = File::getFilesByUserId($user_id, 10);
 
         $this->render('user/profile.html.twig', $user);
     }

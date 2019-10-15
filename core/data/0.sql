@@ -49,7 +49,6 @@ CREATE TABLE file
     name       VARCHAR(256) NOT NULL,
     size       VARCHAR(10)  NOT NULL,
     path       TEXT         NOT NULL,
-    hash       VARCHAR(256) NOT NULL,
     is_private BOOL         NOT NULL DEFAULT FALSE,
     load_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
