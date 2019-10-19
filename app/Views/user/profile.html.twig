@@ -18,8 +18,37 @@
                         {% if (country) %} <div><strong>Country:</strong> {{ country }}</div>{% endif %}
                         {% if (city) %} <div><strong>City:</strong> {{ city }}</div>{% endif %}
                         {% if (registration_time) %} <div><strong>Registration time:</strong> {{ registration_time }}</div>{% endif %}
+
+                        <div class="card mt-2">
+                            <div class="card-body">
+                                <h5>
+                                    Upload new file
+                                </h5>
+
+                                <div class="ml-4">
+                                    <input class="form-check-input" type="checkbox" id="is_private">
+                                    <label class="form-check-label" for="is_private">
+                                        is private file
+                                    </label>
+                                </div>
+
+                                <label for="new_file" class="btn btn-dark mt-2">
+                                    <input type="file" id="new_file" hidden>
+                                    Browse
+                                </label>
+
+                                <button class="btn btn-dark" id="upload_image">
+                                    load
+                                </button>
+
+                                <span id="status_loader" class="ml-3" style="display: none">
+                                    <i class="fas fa-check text-success"></i>
+                                </span>
+                            </div>
+                        </div>
+
                         <div>
-                            <button id="edit_info" class="btn btn-dark mt-5">
+                            <button id="edit_info" class="btn btn-dark mt-2" style="width: 298px">
                                 Edit profile
                             </button>
                         </div>
@@ -32,17 +61,15 @@
                     <table class="table">
                         <thead class="thead-dark">
                         <tr>
-                            <th scope="col">Id</th>
                             <th scope="col">Name</th>
                             <th scope="col">Size</th>
                             <th scope="col">Is private</th>
                             <th scope="col"></th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="file_list">
                             {% for file in files %}
                                 <tr>
-                                    <td><a href="/">{{ file.front_id }}</a></td>
                                     <td>{{ file.name }}</td>
                                     <td>{{ file.size }}</td>
                                     {% if (file.is_private) %}
@@ -68,5 +95,50 @@
         document.getElementById('edit_info').onclick = e => {
             window.location.href = '/profile/edit';
         };
+
+        document.getElementById('upload_image').onclick = uploadFile;
+        document.getElementById('new_file').onchange = onFileChange;
+
+        function uploadFile(e) {
+            e.preventDefault();
+
+            const data = new FormData();
+            data.append('is_private', Number($('#is_private').is(':checked')));
+            data.append('file', $('#new_file').get(0).files[0]);
+            $('#status_loader').hide();
+
+            $.ajax({
+                url: '/file_load',
+                method: 'post',
+                data: data,
+                cache: false,
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    const field_list = $('#file_list');
+
+                    if (field_list.find('tr').length >= 10) {
+                        return;
+                    }
+
+                    const is_private = Number(response.is_private) ? '<td class="text-success">yes</td>' : '<td class="text-danger">no</td>';
+                    field_list.append(`<tr>
+                        <td>${response.name}</td>
+                        <td>${response.size}</td>
+                        ${is_private}
+                        <td>
+                            <a href="/"><span class="text-primary fa fa-save"></span></a>
+                            /
+                            <a href="/"><span class="text-danger fa fa-trash-alt"></span></a>
+                        </td>
+                    </tr>`);
+                }
+            });
+        }
+
+        function onFileChange() {
+            $('#status_loader').show();
+        }
     </script>
 {% endblock %}

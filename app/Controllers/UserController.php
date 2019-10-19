@@ -100,7 +100,7 @@ class UserController extends Controller
 
             do {
                 $front_id = RandomStringGenerator::generate(User::FRONT_ID_LENGTH);
-            } while (User::isValueExist('user_id', $front_id));
+            } while (User::isValueExist('front_id', $front_id));
 
             $user_id = User::addNewUser($user_data, $front_id);
             Client::addNewClient((object)['user_id' => $user_id]);

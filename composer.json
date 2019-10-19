@@ -12,6 +12,7 @@
     "twig/twig": ">2",
     "symfony/yaml": "^3.4.15",
     "ext-pdo": "*",
-    "ext-gd": "*"
+    "ext-gd": "*",
+    "ext-json": "*"
   }
 }
