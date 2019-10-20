@@ -136,7 +136,7 @@ class UserController extends Controller
 
         $user = (array)$user;
         $user['photo'] = UserPhoto::getPhotoUrl($user_id);
-        $user['files'] = File::getFilesByUserId($user_id, 10);
+        $user['files'] = File::getFilesByUserId($user_id);
 
         $this->render('user/profile.html.twig', $user);
     }

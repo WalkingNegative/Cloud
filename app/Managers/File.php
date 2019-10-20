@@ -56,7 +56,7 @@ class File
         ";
 
         !empty($limit)
-        and $sql .= "LIMIT {$limit}";
+            and $sql .= "LIMIT {$limit}";
 
         return DB::getPDO()->query($sql)->fetchAll(\PDO::FETCH_OBJ);
     }
@@ -89,7 +89,7 @@ class File
      */
     public static function addNewFile(stdClass $params): void
     {
-        $params->is_private = (int) $params->is_private;
+        $params->is_private = (int)$params->is_private;
 
         $sql = "
             INSERT INTO
@@ -106,6 +106,9 @@ class File
         DB::getPDO()->query($sql);
     }
 
+    /**
+     * @param string $front_id
+     */
     public static function deleteFileByFrontId(string $front_id): void
     {
         $sql = "
@@ -116,5 +119,54 @@ class File
         ";
 
         DB::getPDO()->query($sql);
+    }
+
+    /**
+     * @param string $front_id
+     * @param int $user_id
+     * @return bool
+     */
+    public static function isFileOwner(string $front_id, int $user_id): bool
+    {
+        $sql = "
+            SELECT
+                *
+            FROM
+                file
+            WHERE
+                front_id = '{$front_id}'
+                AND user_id = '{$user_id}'
+            LIMIT 1
+        ";
+
+        $rows = DB::getPDO()->query($sql)->fetchAll(\PDO::FETCH_OBJ);
+
+        return !!count($rows);
+    }
+
+    /**
+     * @param string $front_id
+     * @return mixed|null
+     */
+    public static function getFileInfoByFrontId(string $front_id)
+    {
+        $sql = "
+            SELECT
+                file.front_id,
+                file.name,
+                file.size,
+                file.path,
+                file.is_private,
+                file.load_time
+            FROM
+                file
+            WHERE
+                front_id = '{$front_id}'
+            LIMIT 1
+        ";
+
+        $result = DB::getPDO()->query($sql)->fetchAll(\PDO::FETCH_OBJ);
+
+        return !empty($result) ? reset($result) : null;
     }
 }

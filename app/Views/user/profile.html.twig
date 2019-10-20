@@ -69,7 +69,7 @@
                         </thead>
                         <tbody id="file_list">
                             {% for file in files %}
-                                <tr>
+                                <tr id="{{ file.front_id }}">
                                     <td>{{ file.name }}</td>
                                     <td>{{ file.size }}</td>
                                     {% if (file.is_private) %}
@@ -80,7 +80,7 @@
                                     <td>
                                         <a href="/"><span class="text-primary fa fa-save"></span></a>
                                         /
-                                        <a href="/"><span class="text-danger fa fa-trash-alt"></span></a>
+                                        <a onclick="deleteFile('{{ file.front_id }}')"><span class="text-danger fa fa-trash-alt"></span></a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -123,14 +123,14 @@
                     }
 
                     const is_private = Number(response.is_private) ? '<td class="text-success">yes</td>' : '<td class="text-danger">no</td>';
-                    field_list.append(`<tr>
+                    field_list.append(`<tr id="${response.file_id}">
                         <td>${response.name}</td>
                         <td>${response.size}</td>
                         ${is_private}
                         <td>
                             <a href="/"><span class="text-primary fa fa-save"></span></a>
                             /
-                            <a href="/"><span class="text-danger fa fa-trash-alt"></span></a>
+                            <a onclick="deleteFile('${response.file_id}')"><span class="text-danger fa fa-trash-alt"></span></a>
                         </td>
                     </tr>`);
                 }
@@ -139,6 +139,18 @@
 
         function onFileChange() {
             $('#status_loader').show();
+        }
+
+        function deleteFile(id) {
+            $.ajax({
+                url: '/file_delete',
+                method: 'post',
+                data: {front_id: id},
+                dataType: 'json',
+                success: function (response) {
+                    $('#' + response.file_id).remove();
+                }
+            });
         }
     </script>
 {% endblock %}

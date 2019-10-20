@@ -50,4 +50,40 @@ class FileController extends Controller
         echo $file_info;
     }
 
+    /**
+     * @action delete
+     * @throws Exception
+     */
+    public function deleteAction(): void
+    {
+        if (!UserToken::isUserTokenValid($_SESSION['user_token'])) {
+            return;
+        }
+
+        $user_id = UserToken::getUserIdByToken($_SESSION['user_token']);
+        $file_id = $_REQUEST['front_id'];
+        $answer = [
+            'user_id' => $user_id,
+            'file_id' => $file_id,
+        ];
+
+        if (!File::isFileOwner($file_id, $user_id)) {
+            $answer['status'] = 0;
+
+            echo json_encode($answer);
+            return;
+        }
+
+        $answer['status'] = 1;
+        $file = File::getFileInfoByFrontId($file_id);
+        $file = (object)$file;
+
+        File::deleteFileByFrontId($file_id);
+        unlink($file->path);
+
+        $answer = json_encode($answer);
+        Action::addAction($user_id, Action::TYPE_FILE_DELETE, $answer);
+
+        echo $answer;
+    }
 }
