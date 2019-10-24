@@ -86,4 +86,24 @@ class FileController extends Controller
 
         echo $answer;
     }
+
+    /**
+     * @action download
+     * @throws Exception
+     */
+    public function downloadAction(): void
+    {
+        if (!UserToken::isUserTokenValid($_SESSION['user_token'])) {
+            return;
+        }
+
+        $user_id = UserToken::getUserIdByToken($_SESSION['user_token']);
+        $file_id = $_REQUEST['front_id'];
+
+        if (!File::isFileOwner($file_id, $user_id)) {
+            return;
+        }
+
+        File::downloadFile($file_id);
+    }
 }

@@ -17,6 +17,7 @@ class Routes
 
         Route::add('^/file_load/?$', ['controller' => 'File', 'action'=>'load']);
         Route::add('^/file_delete/?$', ['controller' => 'File', 'action'=>'delete']);
+        Route::add('^/file_download', ['controller' => 'File', 'action'=>'download']);
         Route::add('^/files/?$', ['controller' => 'File', 'action'=>'files']);
         Route::add('^/files/edit/?$', ['controller' => 'File', 'action'=>'files/edit']);
 
