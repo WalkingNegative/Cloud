@@ -53,10 +53,47 @@ class File
                 JOIN user USING (user_id)
             WHERE
                 user_id = '{$user_id}'
+            ORDER BY
+                file.load_time DESC
         ";
 
         !empty($limit)
             and $sql .= "LIMIT {$limit}";
+
+        return DB::getPDO()->query($sql)->fetchAll(\PDO::FETCH_OBJ);
+    }
+
+    public static function getPublicFiles(string $file_name, int $user_id = null): array
+    {
+        if (empty($user_id)) {
+            $where = "
+                is_private = 0
+            ";
+        } else {
+            $where = "
+                user_id = {$user_id}
+            ";
+        }
+
+        $sql = "
+            SELECT
+                front_id,
+                name,
+                size,
+                path,
+                is_private,
+                load_time
+            FROM
+                file
+            WHERE
+                {$where}
+                AND `name` LIKE '%{$file_name}%'
+            ORDER BY
+                file.load_time DESC
+        ";
+
+        !empty($limit)
+        and $sql .= "LIMIT {$limit}";
 
         return DB::getPDO()->query($sql)->fetchAll(\PDO::FETCH_OBJ);
     }
@@ -135,7 +172,10 @@ class File
                 file
             WHERE
                 front_id = '{$front_id}'
-                AND user_id = '{$user_id}'
+                AND (
+                    user_id = '{$user_id}'
+                    OR is_private = 0
+                )
             LIMIT 1
         ";
 

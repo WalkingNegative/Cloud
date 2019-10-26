@@ -106,4 +106,27 @@ class FileController extends Controller
 
         File::downloadFile($file_id);
     }
+
+    /**
+     * @action files
+     * @throws Exception
+     */
+    public function filesAction(): void
+    {
+        if (!UserToken::isUserTokenValid($_SESSION['user_token'])) {
+            header('location: /login');
+        }
+
+        $user_id = 0;
+        $data = [];
+        $data['is_private'] = $is_private = $_REQUEST['is_private'];
+        $data['search'] = $search = $_REQUEST['search'] ?? '';
+
+        if (!empty($is_private)) {
+            $user_id = UserToken::getUserIdByToken($_SESSION['user_token']);
+        }
+
+        $data['files'] = File::getPublicFiles($search, $user_id);
+        $this->render('file/files.html.twig', $data);
+    }
 }

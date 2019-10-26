@@ -1,0 +1,54 @@
+{% extends 'templates/base.html.twig' %}
+
+{% block content %}
+    <form class="mt-5 ml-3" action="/files" method="post">
+        <div class="row">
+            <input class="form-control col-sm-11" type="text" name="search" id="search" value="{{ search }}"
+                   placeholder="Enter filename...">
+            <input type="hidden" name="is_private" id="is_private">
+
+            <button class="btn btn-dark ml-1" id="upload_image">
+                Search
+            </button>
+        </div>
+    </form>
+
+    <div class="form-group row ml-4">
+        <input class="form-check-input" type="checkbox" id="is_private_cb">
+        <label class="form-check-label" for="is_private">
+            is private file
+        </label>
+    </div>
+
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Size</th>
+            <th scope="col">Loaded</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody id="file_list">
+        {% for file in files %}
+            <tr id="{{ file.front_id }}">
+                <td>{{ file.name }}</td>
+                <td>{{ file.size }}</td>
+                <td>{{ file.load_time }}</td>
+                <td>
+                    <a href="/file_download?front_id={{ file.front_id }}"><span class="text-primary fa fa-save"></span></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        const isPrivateClick = () => {
+            const is_private = Number($('#is_private_cb').is(':checked'));
+            $('#is_private').val(is_private);
+        };
+
+        document.getElementById('is_private_cb').onclick = isPrivateClick;
+    </script>
+{% endblock %}

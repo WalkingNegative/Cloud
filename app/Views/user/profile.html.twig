@@ -64,6 +64,7 @@
                             <th scope="col">Name</th>
                             <th scope="col">Size</th>
                             <th scope="col">Is private</th>
+                            <th scope="col">Loaded</th>
                             <th scope="col"></th>
                         </tr>
                         </thead>
@@ -73,10 +74,11 @@
                                     <td>{{ file.name }}</td>
                                     <td>{{ file.size }}</td>
                                     {% if (file.is_private) %}
-                                        <td class="text-danger">no</td>
-                                    {% else %}
                                         <td class="text-success">yes</td>
+                                    {% else %}
+                                        <td class="text-danger">no</td>
                                     {% endif %}
+                                    <td>{{ file.load_time }}</td>
                                     <td>
                                         <a href="/file_download?front_id={{ file.front_id }}"><span class="text-primary fa fa-save"></span></a>
                                         /
@@ -127,6 +129,7 @@
                         <td>${response.name}</td>
                         <td>${response.size}</td>
                         ${is_private}
+                        <td></td>
                         <td>
                             <a href="/"><span class="text-primary fa fa-save"></span></a>
                             /
