@@ -113,7 +113,7 @@ class File
             'front_id' => $file_front_id,
             'user_id' => $user->user_id,
             'name' => $file->name,
-            'size' => round($file->size / 1048576, 2),
+            'size' => $file->size,
             'path' => $file_path,
             'is_private' => $is_private,
         ];
@@ -127,6 +127,7 @@ class File
     public static function addNewFile(stdClass $params): void
     {
         $params->is_private = (int)$params->is_private;
+        $params->size = self::getFileSize($params->size);
 
         $sql = "
             INSERT INTO
@@ -210,7 +211,11 @@ class File
         return !empty($result) ? reset($result) : null;
     }
 
-    public static function downloadFile(string $front_id) {
+    /**
+     * @param string $front_id
+     */
+    public static function downloadFile(string $front_id)
+    {
         $file = self::getFileInfoByFrontId($front_id);
 
         if (empty($file) || empty($file->path)) {
@@ -226,5 +231,22 @@ class File
         header('Pragma: public');
         header('Content-Length: ' . filesize($file->path));
         readfile($file->path);
+    }
+
+    /**
+     * @param int $size
+     * @return string
+     */
+    public static function getFileSize(int $size): string
+    {
+        if ($size < 1024) {
+            return round($size, 2) . ' B';
+        } elseif ($size < 1048576) {
+            return round($size / 1024, 2) . ' KB';
+        } elseif ($size / 1073741824) {
+            return round($size / 1048576, 2) . ' MB';
+        } else {
+            return round($size / 1073741824, 2) . ' GB';
+        }
     }
 }

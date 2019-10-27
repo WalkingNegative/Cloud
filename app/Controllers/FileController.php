@@ -40,7 +40,7 @@ class FileController extends Controller
         $answer = [
             'file_id' => $front_id,
             'name' => $file->name,
-            'size' => round($file->size / 1048576, 2),
+            'size' => File::getFileSize($file->size),
             'is_private' => $is_private,
         ];
 

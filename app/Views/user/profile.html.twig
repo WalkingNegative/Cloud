@@ -125,11 +125,11 @@
                     }
 
                     const is_private = Number(response.is_private) ? '<td class="text-success">yes</td>' : '<td class="text-danger">no</td>';
-                    field_list.append(`<tr id="${response.file_id}">
+                    field_list.prepend(`<tr id="${response.file_id}">
                         <td>${response.name}</td>
                         <td>${response.size}</td>
                         ${is_private}
-                        <td></td>
+                        <td>${getDate()}</td>
                         <td>
                             <a href="/"><span class="text-primary fa fa-save"></span></a>
                             /
@@ -154,6 +154,25 @@
                     $('#' + response.file_id).remove();
                 }
             });
+        }
+
+        function getDate() {
+            const date = new Date();
+            let day = date.getDate();
+            let month = date.getMonth() + 1;
+            const hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+            const minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+            const seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+
+            if (month < 10) {
+                month = '0' + month;
+            }
+
+            if (day < 10) {
+                day = '0' + day;
+            }
+
+            return date.getFullYear() + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
         }
     </script>
 {% endblock %}
