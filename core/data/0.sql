@@ -29,7 +29,7 @@ CREATE TABLE operator
     user_id           INT         NOT NULL,
     first_name        VARCHAR(50) NULL     DEFAULT NULL,
     last_name         VARCHAR(50) NULL     DEFAULT NULL,
-    birth             DATE        NULL     DEFAULT NULL,
+    is_active         BOOL        NOT NULL DEFAULT TRUE,
     registration_time DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
