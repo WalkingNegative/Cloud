@@ -68,7 +68,12 @@ class UserController extends Controller
     public function logoutAction(): void
     {
         UserToken::deleteSession($_SESSION['user_token']);
-        header('location: /profile');
+
+        if (empty($_REQUEST['is_admin'])) {
+            header('location: /profile');
+        } else {
+            header('location: /admin/login');
+        }
     }
 
     /**

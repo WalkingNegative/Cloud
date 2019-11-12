@@ -11,7 +11,7 @@ class Routes
         Route::add('^/$', ['controller' => 'Default', 'action'=>'index']);
 
         Route::add('^/login/?$', ['controller' => 'User', 'action'=>'login']);
-        Route::add('^/logout/?$', ['controller' => 'User', 'action'=>'logout']);
+        Route::add('^/logout', ['controller' => 'User', 'action'=>'logout']);
         Route::add('^/register/?$', ['controller' => 'User', 'action'=>'register']);
 
         Route::add('^/profile/?$', ['controller' => 'User', 'action'=>'profile']);
@@ -23,7 +23,6 @@ class Routes
         Route::add('^/files/?$', ['controller' => 'File', 'action'=>'files']);
 
         Route::add('^/admin/login/?$', ['controller' => 'Admin', 'action'=>'login']);
-        Route::add('^/admin/logout/?$', ['controller' => 'Admin', 'action'=>'login']);
 
         Route::add('^/admin/create_admin/?$', ['controller' => 'Admin', 'action'=>'create_admin']);
         Route::add('^/admin/users/?$', ['controller' => 'Admin', 'action'=>'users']);
