@@ -24,11 +24,13 @@ class Routes
 
         Route::add('^/admin/login/?$', ['controller' => 'Admin', 'action'=>'login']);
 
-        Route::add('^/admin/create_admin/?$', ['controller' => 'Admin', 'action'=>'create_admin']);
         Route::add('^/admin/users/?$', ['controller' => 'Admin', 'action'=>'users']);
         Route::add('^/admin/ban/?$', ['controller' => 'Admin', 'action'=>'ban']);
+        Route::add('^/admin/create_admin/?$', ['controller' => 'Admin', 'action'=>'create_admin']);
 
         Route::add('^/admin/files/?$', ['controller' => 'Admin', 'action'=>'files']);
         Route::add('^/admin/file_delete/?$', ['controller' => 'Admin', 'action'=>'file_delete']);
+
+        Route::add('^/admin/actions/?$', ['controller' => 'Admin', 'action'=>'actions']);
     }
 }

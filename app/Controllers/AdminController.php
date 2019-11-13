@@ -4,6 +4,7 @@ namespace app\Controllers;
 
 
 use app\Managers\Action;
+use app\Managers\Client;
 use app\Managers\User;
 use app\Managers\UserToken;
 use app\Managers\Operator;
@@ -46,5 +47,17 @@ class AdminController extends Controller
         }
 
         $this->render('admin/login.html.twig');
+    }
+
+    public function usersAction(): void
+    {
+        if (!Operator::isAdminLogined($_SESSION['user_token'])) {
+            header('location: /admin/login');
+            return;
+        }
+
+        $users = Client::getAllClientsInfo();
+
+        $this->render('admin/users.html.twig', ['users' => $users]);
     }
 }

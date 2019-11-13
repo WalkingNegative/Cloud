@@ -78,6 +78,11 @@ class Client
         return DB::getPdo()->lastInsertId();
     }
 
+    /**
+     * @param $id
+     * @param bool $is_front_id
+     * @return mixed
+     */
     public static function getClientInfo($id, bool $is_front_id = true)
     {
         $field = $is_front_id ? 'front_id' : 'user_id';
@@ -104,5 +109,31 @@ class Client
         $rows = DB::getPDO()->query($sql)->fetchAll(\PDO::FETCH_OBJ);
 
         return reset($rows);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getAllClientsInfo(): array
+    {
+        $sql = "
+            SELECT DISTINCT
+                email,
+                client.user_id,
+                front_id,
+                registration_time,
+                first_name,
+                last_name,
+                birth,
+                country,
+                city,
+                block_time
+            FROM
+                client
+                JOIN user USING (user_id)
+                LEFT JOIN blocked_users USING (user_id)
+        ";
+
+        return DB::getPDO()->query($sql)->fetchAll(\PDO::FETCH_OBJ);
     }
 }

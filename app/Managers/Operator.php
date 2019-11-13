@@ -42,7 +42,7 @@ class Operator
             return false;
         }
 
-        $user = self::getOperatorByField('operator_id', $user_id);
+        $user = self::getOperatorByField('user_id', $user_id);
 
         return ($user && $user->is_active);
     }
