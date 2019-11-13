@@ -1,7 +1,7 @@
 {% extends 'templates/admin_default.html.twig' %}
 
 {% block content %}
-    <table class="table mt-5">
+    <table class="table">
         <thead class="thead-dark">
         <tr>
             <th scope="col">ID</th>
@@ -26,6 +26,13 @@
                 <td>{{ user.country }}</td>
                 <td>{{ user.city }}</td>
                 <td>{{ user.registration_time }}</td>
+                <td>
+                    {% if (user.block_time) %}
+                        <div class="btn btn-outline-primary btn-sm" style="width: 100px">Unblock</div>
+                    {% else %}
+                        <div class="btn btn-primary btn-sm" style="width: 100px">Block</div>
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
         </tbody>
