@@ -4,6 +4,7 @@ namespace app\Controllers;
 
 
 use app\Managers\Action;
+use app\Managers\BlockedUser;
 use app\Managers\Client;
 use app\Managers\User;
 use app\Managers\UserToken;
@@ -59,5 +60,24 @@ class AdminController extends Controller
         $users = Client::getAllClientsInfo();
 
         $this->render('admin/users.html.twig', ['users' => $users]);
+    }
+
+    public function banAction(): void
+    {
+        if (!Operator::isAdminLogined($_SESSION['user_token'])) {
+            return;
+        }
+
+        $user = Client::getClientInfo($_REQUEST['front_id'], true);
+
+        if (empty($user)) {
+            return;
+        }
+
+        if ($_REQUEST['is_ban']) {
+            BlockedUser::blockUser($user->user_id);
+        } else {
+            BlockedUser::unblockUser($user->user_id);
+        }
     }
 }

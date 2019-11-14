@@ -17,7 +17,7 @@
         </thead>
         <tbody id="file_list">
         {% for user in users %}
-            <tr id="{{ user.front_id }}">
+            <tr>
                 <td>{{ user.front_id }}</td>
                 <td>{{ user.first_name }}</td>
                 <td>{{ user.last_name }}</td>
@@ -28,13 +28,39 @@
                 <td>{{ user.registration_time }}</td>
                 <td>
                     {% if (user.block_time) %}
-                        <div class="btn btn-outline-primary btn-sm" style="width: 100px">Unblock</div>
+                        <div id="{{ user.front_id }}" class="btn btn-outline-primary btn-sm" style="width: 100px" onclick="blockUser('{{ user.front_id }}', '{{ user.block_time }}')">Unblock</div>
                     {% else %}
-                        <div class="btn btn-primary btn-sm" style="width: 100px">Block</div>
+                        <div id="{{ user.front_id }}" class="btn btn-primary btn-sm" style="width: 100px" onclick="blockUser('{{ user.front_id }}', '{{ user.block_time }}')">Block</div>
                     {% endif %}
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+
+    <script>
+       function blockUser(id, block_time) {
+            const is_ban = Number(!block_time);
+            const btn = $(`#${id}`);
+
+            if (is_ban) {
+                btn.text('Unblock');
+                btn.removeClass('btn-primary');
+                btn.addClass('btn-outline-primary');
+            } else {
+                btn.text('Block');
+                btn.removeClass('btn-outline-primary');
+                btn.addClass('btn-primary');
+            }
+
+           $.ajax({
+               url: '/admin/ban',
+               method: 'post',
+               data: {
+                   front_id: id,
+                   is_ban: is_ban
+               }
+           });
+       }
+    </script>
 {% endblock %}
