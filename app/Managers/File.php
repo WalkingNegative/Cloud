@@ -77,14 +77,20 @@ class File
 
         $sql = "
             SELECT
-                front_id,
+                file.front_id,
                 name,
                 size,
                 path,
                 is_private,
+                first_name,
+                last_name, 
+                email,
+                user.front_id AS user_id,
                 load_time
             FROM
                 file
+                LEFT JOIN user USING (user_id)
+                LEFT JOIN client USING (user_id)
             WHERE
                 {$where}
                 AND `name` LIKE '%{$file_name}%'

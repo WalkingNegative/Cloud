@@ -1,0 +1,59 @@
+{% extends 'templates/admin_default.html.twig' %}
+
+{% block content %}
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Size</th>
+            <th scope="col">Owner</th>
+            <th scope="col">Is private</th>
+            <th scope="col">Loaded</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody id="file_list">
+        {% for file in files %}
+            <tr id="{{ file.front_id }}">
+                <td>{{ file.front_id }}</td>
+                <td>{{ file.name }}</td>
+                <td>{{ file.size }}</td>
+                <td>
+                    {% if (file.first_name and file.last_name) %}
+                        {{ file.first_name }} {{ file.last_name }}
+                    {% else %}
+                        {{ file.email }}
+                    {% endif %}
+                    ({{ file.user_id }})
+                </td>
+                {% if (file.is_private) %}
+                    <td class="text-success">yes</td>
+                {% else %}
+                    <td class="text-danger">no</td>
+                {% endif %}
+                <td>{{ file.load_time }}</td>
+                <td>
+                    <a href="/admin/file_download?front_id={{ file.front_id }}"><span class="text-primary fa fa-save"></span></a>
+                    /
+                    <a onclick="deleteFile('{{ file.front_id }}')"><span class="text-danger fa fa-trash-alt"></span></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        function deleteFile(id) {
+            $.ajax({
+                url: '/admin/file_delete',
+                method: 'post',
+                data: { front_id: id },
+                dataType: 'json',
+                success: function (response) {
+                    $('#' + response.file_id).remove();
+                }
+            });
+        }
+    </script>
+{% endblock %}
