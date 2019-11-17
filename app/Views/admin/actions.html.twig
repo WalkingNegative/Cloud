@@ -1,0 +1,46 @@
+{% extends 'templates/admin_default.html.twig' %}
+
+{% block content %}
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Time</th>
+                <th scope="col">Type</th>
+                <th scope="col">User</th>
+                <th scope="col">Description</th>
+            </tr>
+        </thead>
+
+        <tbody id="file_list">
+        {% for action in actions %}
+            <tr>
+                <td>{{ action.action_time }}</td>
+                <td>{{ action.type }}</td>
+                <td>
+                    {% if (action.first_name and action.last_name) %}
+                        {{ action.first_name }} {{ action.last_name }}
+                    {% else %}
+                        {{ action.email }}
+                    {% endif %}
+                    ({{ action.user_id }})
+                </td>
+                <td>{{ action.description }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        function deleteFile(id) {
+            $.ajax({
+                url: '/admin/file_delete',
+                method: 'post',
+                data: { front_id: id },
+                dataType: 'json',
+                success: function (response) {
+                    $('#' + response.file_id).remove();
+                }
+            });
+        }
+    </script>
+{% endblock %}

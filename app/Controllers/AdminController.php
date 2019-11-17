@@ -155,4 +155,21 @@ class AdminController extends Controller
         $file_id = $_REQUEST['front_id'];
         File::downloadFile($file_id);
     }
+
+    /**
+     * @action actions
+     * @throws Exception
+     */
+    public function actionsAction(): void
+    {
+        if (!Operator::isAdminLogined($_SESSION['user_token'])) {
+            header('location: /admin/login');
+            return;
+        }
+
+        $data = [];
+        $data['actions'] = Action::getActionList();
+
+        $this->render('admin/actions.html.twig', $data);
+    }
 }
