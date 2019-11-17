@@ -3,6 +3,7 @@
 namespace app\Controllers;
 
 use app\Managers\Action;
+use app\Managers\BlockedUser;
 use app\Managers\Client;
 use app\Managers\File;
 use app\Managers\User;
@@ -46,7 +47,7 @@ class UserController extends Controller
                 return;
             }
 
-            if ($user->is_blocked) {//todo: fix
+            if (BlockedUser::isValueExist('user_id', $user->user_id)) {
                 $data['error'] = 'You are blocked!';
                 $this->render('user/login.html.twig', $data);
                 return;
