@@ -1,6 +1,13 @@
 {% extends 'templates/admin_default.html.twig' %}
 
 {% block content %}
+    <form class="ml-3 mb-2" action="/admin/files" method="post">
+        <div class="row">
+            <input class="form-control col-sm-11" type="text" name="search" id="search" value="{{ search }}"
+                   placeholder="Enter filename..." autocomplete="off">
+        </div>
+    </form>
+
     <table class="table">
         <thead class="thead-dark">
         <tr>

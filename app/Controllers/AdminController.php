@@ -105,7 +105,8 @@ class AdminController extends Controller
         }
 
         $data = [];
-        $data['files'] = File::getPublicFiles('');
+        $data['search'] = $search = $_REQUEST['search'] ?? '';
+        $data['files'] = File::getPublicFiles($search);
 
         $this->render('admin/files.html.twig', $data);
     }

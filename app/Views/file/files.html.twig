@@ -4,12 +4,8 @@
     <form class="mt-5 ml-3" action="/files" method="post">
         <div class="row">
             <input class="form-control col-sm-11" type="text" name="search" id="search" value="{{ search }}"
-                   placeholder="Enter filename...">
+                   placeholder="Enter filename..." autocomplete="off">
             <input type="hidden" name="is_private" id="is_private">
-
-            <button class="btn btn-dark ml-1" id="upload_image">
-                Search
-            </button>
         </div>
     </form>
 
