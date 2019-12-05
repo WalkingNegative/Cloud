@@ -57,7 +57,18 @@ CREATE TABLE file
     name       VARCHAR(256) NOT NULL,
     size       VARCHAR(10)  NOT NULL,
     path       TEXT         NOT NULL,
-    is_private BOOL         NOT NULL DEFAULT FALSE,
+    load_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE public_file
+(
+    file_id    INT AUTO_INCREMENT PRIMARY KEY,
+    front_id   VARCHAR(8)   NOT NULL,
+    user_id    INT          NOT NULL,
+    name       VARCHAR(256) NOT NULL,
+    size       VARCHAR(10)  NOT NULL,
+    path       TEXT         NOT NULL,
     load_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE
 );
@@ -74,9 +85,17 @@ CREATE TABLE action
 
 CREATE TABLE blocked_users
 (
-    block_id   INT AUTO_INCREMENT PRIMARY KEY,
+    blocked_users_id   INT AUTO_INCREMENT PRIMARY KEY,
     user_id    INT      NOT NULL,
     reason     TEXT     NULL     DEFAULT NULL,
     block_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE login
+(
+    login_id   INT AUTO_INCREMENT PRIMARY KEY,
+    user_id     INT         NOT NULL,
+    login_time DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE
 );
