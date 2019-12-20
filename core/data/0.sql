@@ -53,6 +53,13 @@ CREATE TABLE file
     load_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE file_user
+(
+    file_user_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id      INT NOT NULL,
+    file_id      INT NOT NULL
+);
+
 CREATE TABLE action
 (
     action_id   INT AUTO_INCREMENT PRIMARY KEY,
@@ -67,4 +74,13 @@ CREATE TABLE blocked_users
     user_id    INT      NOT NULL,
     reason     TEXT     NULL     DEFAULT NULL,
     block_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE login
+(
+    login_id   INT AUTO_INCREMENT PRIMARY KEY,
+    user_id    INT      NOT NULL,
+    login_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE
 );

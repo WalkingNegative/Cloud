@@ -31,6 +31,20 @@ class Action
         DB::getPDO()->query($sql);
     }
 
+    /**
+     * @param int $user_id
+     */
+    public static function loginAction(int $user_id): void
+    {
+        $sql = "
+            INSERT INTO login
+            SET
+                user_id = '{$user_id}'
+        ";
+
+        DB::getPDO()->query($sql);
+    }
+
     public static function getActionList(): array
     {
         $sql = "

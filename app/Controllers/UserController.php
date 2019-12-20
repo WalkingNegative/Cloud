@@ -54,6 +54,7 @@ class UserController extends Controller
             }
 
             Action::addAction($user->user_id, Action::TYPE_LOGIN, 'client');
+            Action::loginAction($user->user_id);
 
             $_SESSION['user_token'] = UserToken::setUserToken($user->user_id);
             header('location: /profile');

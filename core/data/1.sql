@@ -9,16 +9,14 @@ CREATE TABLE user
 
 CREATE TABLE user_token
 (
-    user_token_id INT PRIMARY KEY,
-    user_id       INT         NOT NULL,
-    token         VARCHAR(64) NOT NULL,
-    valid_to      DATETIME    NOT NULL,
+    user_id  INT PRIMARY KEY,
+    token    VARCHAR(64) NOT NULL,
+    valid_to DATETIME    NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE client
 (
-    client_id  INT AUTO_INCREMENT PRIMARY KEY,
     user_id    INT         NOT NULL,
     first_name VARCHAR(50) NULL DEFAULT NULL,
     last_name  VARCHAR(50) NULL DEFAULT NULL,
@@ -26,12 +24,10 @@ CREATE TABLE client
     city       VARCHAR(50) NULL DEFAULT NULL,
     birth      DATE        NULL DEFAULT NULL,
     FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE
-
 );
 
 CREATE TABLE operator
 (
-    operator_id       INT AUTO_INCREMENT PRIMARY KEY,
     user_id           INT         NOT NULL,
     first_name        VARCHAR(50) NULL     DEFAULT NULL,
     last_name         VARCHAR(50) NULL     DEFAULT NULL,
@@ -53,23 +49,19 @@ CREATE TABLE file
 (
     file_id    INT AUTO_INCREMENT PRIMARY KEY,
     front_id   VARCHAR(8)   NOT NULL,
-    user_id    INT          NOT NULL,
     name       VARCHAR(256) NOT NULL,
     size       VARCHAR(10)  NOT NULL,
     path       TEXT         NOT NULL,
-    load_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE
+    is_private BOOL         NOT NULL DEFAULT FALSE,
+    load_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE public_file
+CREATE TABLE file_user
 (
-    file_id    INT AUTO_INCREMENT PRIMARY KEY,
-    front_id   VARCHAR(8)   NOT NULL,
-    user_id    INT          NOT NULL,
-    name       VARCHAR(256) NOT NULL,
-    size       VARCHAR(10)  NOT NULL,
-    path       TEXT         NOT NULL,
-    load_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    file_user_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id      INT NOT NULL,
+    file_id      INT NOT NULL,
+    FOREIGN KEY (file_id) REFERENCES file (file_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE
 );
 
@@ -85,17 +77,17 @@ CREATE TABLE action
 
 CREATE TABLE blocked_users
 (
-    blocked_users_id   INT AUTO_INCREMENT PRIMARY KEY,
     user_id    INT      NOT NULL,
     reason     TEXT     NULL     DEFAULT NULL,
     block_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE
 );
 
+
 CREATE TABLE login
 (
     login_id   INT AUTO_INCREMENT PRIMARY KEY,
-    user_id     INT         NOT NULL,
-    login_time DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    user_id    INT      NOT NULL,
+    login_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE CASCADE
 );

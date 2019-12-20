@@ -124,13 +124,15 @@ class File
             'is_private' => $is_private,
         ];
 
-        self::addNewFile((object)$params);
+        $file_id = self::addNewFile((object)$params);
+        self::addFileUser($file_id, $user->user_id);
     }
 
     /**
      * @param stdClass $params
+     * @return string
      */
-    public static function addNewFile(stdClass $params): void
+    public static function addNewFile(stdClass $params): string
     {
         $params->is_private = (int)$params->is_private;
         $params->size = self::getFileSize($params->size);
@@ -145,6 +147,24 @@ class File
                 size = '{$params->size}',
                 path = '{$params->path}',
                 is_private = '{$params->is_private}'
+        ";
+
+        DB::getPDO()->query($sql);
+        return DB::getPDO()->lastInsertId();
+    }
+
+    /**
+     * @param int $file_id
+     * @param int $user_id
+     */
+    public static function addFileUser(int $file_id = 0, int $user_id = 0): void
+    {
+        $sql = "
+            INSERT INTO
+                file_user
+            SET 
+                file_id = '{$file_id}',
+                user_id = '{$user_id}'
         ";
 
         DB::getPDO()->query($sql);
